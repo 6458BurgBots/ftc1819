@@ -48,11 +48,12 @@ public class Whales extends OpMode{
                 break;
             case 40:
                 moveHelper.turn(0);
-                if (getRuntime() > lastTime + .25) {
+                if (getRuntime() > lastTime + .30) {
                     lastTime = getRuntime();
                     state = 50;
                 }
                 break;
+
             case 50:
                 moveHelper.driveForward(.5);
                 if (getRuntime() > lastTime + 1) {
