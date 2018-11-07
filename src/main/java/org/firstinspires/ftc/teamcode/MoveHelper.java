@@ -26,7 +26,7 @@ public class MoveHelper extends NoOperationHelper {
 
     public void init() {
         // links motor names here to the names given in the config on the phones
-        FLMotor = hardwareMap.dcMotor.get("LF");
+        FLMotor = hardwareMap.dcMotor.get("LF"); // TODO: Fix the config names to match the variables
         FRMotor = hardwareMap.dcMotor.get("RF");
         BLMotor = hardwareMap.dcMotor.get("LB");
         BRMotor = hardwareMap.dcMotor.get("RB");

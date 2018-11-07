@@ -10,8 +10,12 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class NoOperationHelper {
 
-    Telemetry telemetry;
-    HardwareMap hardwareMap;
+    protected Telemetry telemetry;  // this is protected because it can be used by derived classes,
+                                    // in this case LanderHelper is a derived class from NoOperationHelper
+                                    // Telemetry refers to displaying information on the driver phone
+                                    // Telemetry is defined through FtcRobotController
+    protected HardwareMap hardwareMap;  // hardwareMap is defined through FtcRobot Controller
+                                        // hardwareMap is created through Config on Robot Control Phone
 
     NoOperationHelper(Telemetry t, HardwareMap h)
     {
