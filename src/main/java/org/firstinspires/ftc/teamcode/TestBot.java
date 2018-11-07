@@ -49,7 +49,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 public class TestBot
 {
     /* Public OpMode members. */
-    public DcMotor  leftDrive   = null;
+    public DcMotor  backLeft   = null; // Class variable
+    public DcMotor  backRight   = null; // Class variable
+    public DcMotor  frontRight = null; // Class variable
+    public DcMotor  frontLeft   = null; // Class variable
+
 
     /* local OpMode members. */
     HardwareMap hwMap           =  null;
@@ -66,15 +70,29 @@ public class TestBot
         hwMap = ahwMap;
 
         // Define and Initialize Motors
-        leftDrive  = hwMap.get(DcMotor.class, "Left");
-        leftDrive.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        backLeft  = hwMap.get(DcMotor.class, "LB");
+        backRight  = hwMap.get(DcMotor.class, "RB");
+        frontLeft  = hwMap.get(DcMotor.class, "LF");
+        frontRight  = hwMap.get(DcMotor.class, "RF");
+
+        backLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        backRight.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        frontLeft.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
+        frontRight.setDirection(DcMotor.Direction.FORWARD); // Set to REVERSE if using AndyMark motors
 
         // Set all motors to zero power
-        leftDrive.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
 
         // Set all motors to run without encoders.
         // May want to use RUN_USING_ENCODERS if encoders are installed.
-        leftDrive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
  }
 

@@ -86,18 +86,38 @@ public class Test_Linear extends LinearOpMode {
         // run until the end of the match (driver presses STOP)
         while (opModeIsActive()) {
 
-            telemetry.addData("red", colourSensor.red());
-            telemetry.addData("blue", colourSensor.blue());
-            telemetry.addData("green", colourSensor.green());
+            if(gamepad1.x){
+                robot.frontLeft.setPower(.3);
 
+            }else {
+                robot.frontLeft.setPower(0);
+            }
 
-            // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-            left = -1;  //-gamepad1.left_stick_y;
-            //right = -gamepad1.right_stick_y;
-            robot.leftDrive.setPower(left);
+            if(gamepad1.a){
+                robot.backLeft.setPower(.3);
 
-            // Send telemetry message to signify robot running;
-            telemetry.addData("left", "%.2f", left);
+            }else {
+                robot.backLeft.setPower(0);
+            }
+
+            if(gamepad1.y){
+                robot.frontRight.setPower(.3);
+
+            }else {
+                robot.frontRight.setPower(0);
+            }
+
+            if(gamepad1.b){
+                robot.backRight.setPower(.3);
+
+            }else {
+                robot.backRight.setPower(0);
+            }
+
+            telemetry.addData("backLeft", robot.backLeft.getCurrentPosition());
+            telemetry.addData("backRight", robot.backRight.getCurrentPosition());
+            telemetry.addData("frontLeft", robot.frontLeft.getCurrentPosition());
+            telemetry.addData("frontRight", robot.frontRight.getCurrentPosition());
 
             telemetry.update();
 
