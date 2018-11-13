@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,11 +15,15 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MoveHelper extends NoOperationHelper {
 
+    private static double MARKER_SERVO_CLOSED = 0;
+    private static double MARKER_SERVO_OPEN = .0;
+
 // declares the motors; gives them names we will use to call them later
     protected DcMotor FLMotor;
     protected DcMotor FRMotor;
     protected DcMotor BLMotor;
     protected DcMotor BRMotor;
+    protected Servo MarkerServo;
     MoveHelper(Telemetry t, HardwareMap h)
     {
         super(t, h);
@@ -30,14 +35,19 @@ public class MoveHelper extends NoOperationHelper {
         FRMotor = hardwareMap.dcMotor.get("RF");
         BLMotor = hardwareMap.dcMotor.get("LB");
         BRMotor = hardwareMap.dcMotor.get("RB");
+        MarkerServo = hardwareMap.servo.get("MarkerServo");
 
-        // setting directions/telling them we are not using encoders
+        MarkerServo.setPosition(MARKER_SERVO_CLOSED);
+
+
+        // setting directions/telling them we are using encoders
         FLMotor.setDirection(DcMotor.Direction.REVERSE);
         BLMotor.setDirection(DcMotor.Direction.REVERSE);
         FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
     }
     public void omniDrive(double lx,double ly, double rx){
         telemetry.addData("Drive input (lx,ly): ", lx + "," + ly);
@@ -46,6 +56,7 @@ public class MoveHelper extends NoOperationHelper {
         double fr = ly + lx + rx;
         double bl = ly + lx - rx;
         double br = ly - lx + rx;
+
 
         String output = String.format("%1$.3f,%1$.3f,%1$.3f,%1$.3f",fl,fr,bl,br);
         telemetry.addData("Driving (fl,fr,bl,br): ", output);
@@ -64,6 +75,8 @@ public class MoveHelper extends NoOperationHelper {
         BLMotor.setPower(rx);
         BRMotor.setPower(-rx);
     }
+
+    public void moveMarkerServo(double position){MarkerServo.setPosition(position);}
 
     // actually turns on the motors/sets power??
     public void runFLMotor (double power){
@@ -89,6 +102,34 @@ public class MoveHelper extends NoOperationHelper {
 
     public void loop(){
     }
+    public void showEncoderValues (){
+        telemetry.addData("BR Encoder", BRMotor.getCurrentPosition());
+        telemetry.addData("BL Encoder", BLMotor.getCurrentPosition());
+        telemetry.addData("FR Encoder", FRMotor.getCurrentPosition());
+        telemetry.addData("FL Encoder", FLMotor.getCurrentPosition());
+
+    }
+    public void resetEncoders (){
+        BRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    }
+    public void runUsingEncoders (){
+        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+    public void moveToPosition (int position){
+        FLMotor.setTargetPosition(position);
+        FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+}
+
+    public int getEncoderValue(){
+        return FLMotor.getCurrentPosition();
+
+    }
 
     public void checkTeleOp(Gamepad gamepad1,Gamepad gamepad2){
         // alaina is struggling to find a way to describe this
@@ -103,8 +144,8 @@ public class MoveHelper extends NoOperationHelper {
         telemetry.addData("Right X", RX);
         telemetry.addData("BR Encoder", BRMotor.getCurrentPosition());
         telemetry.addData("BL Encoder", BLMotor.getCurrentPosition());
-        telemetry.addData("FR Encorder", FRMotor.getCurrentPosition());
-        telemetry.addData("FL Encorder", FLMotor.getCurrentPosition());
+        telemetry.addData("FR Encoder", FRMotor.getCurrentPosition());
+        telemetry.addData("FL Encoder", FLMotor.getCurrentPosition());
         LY = Range.clip(LY, -1, 1);
         LX = Range.clip(LX, -1, 1);
         RX = Range.clip(RX, -1, 1);
@@ -122,6 +163,13 @@ public class MoveHelper extends NoOperationHelper {
         }
         if (gamepad1.y) {
             FRMotor.setPower(.3);
+        }
+
+        if(gamepad2.b){
+            moveMarkerServo(MARKER_SERVO_OPEN);
+        }
+        if(gamepad2.x){
+            moveMarkerServo(MARKER_SERVO_CLOSED);
         }
     }
     public int GetBRMotorPosition(){

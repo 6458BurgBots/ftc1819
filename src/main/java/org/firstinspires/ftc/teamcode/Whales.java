@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="Whales", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
+@Autonomous(name="Whales", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
                                             // name = "Whales" shows up in the driver's station list
                                             // group = "Autonomous" refers to which list in the driver's station
 public class Whales extends OpMode{
@@ -39,15 +40,25 @@ public class Whales extends OpMode{
         switch (state) {
             case 0:
                 lastTime = getRuntime();
-                state = 10;
+                state = 5;
                 break;
+
+            case 5:
+                moveHelper.resetEncoders();
+                advanceToStateAfterTime(6, .5);
+                break;
+
+            case 6:
+                moveHelper.runUsingEncoders();
+                advanceToStateAfterTime(10, .5);
+                break;
+
             case 10: // move out from landing spot
-                moveHelper.driveForward(.5);
-                advanceToStateAfterTime(20, .9); // TODO: change applicable cases to use new procedure
-//                if (getRuntime() > lastTime + 1) {
-//                    lastTime = getRuntime();
-//                    state = 20;
-//                }
+               moveHelper.driveForward(.5);
+                if (moveHelper.getEncoderValue() > 800) {
+                    lastTime = getRuntime();
+                    state = 20;
+               }
                 //advanceToStateAfterTime(20, 1);
                 break;
             case 20: // stop for .25 seconds
@@ -73,8 +84,8 @@ public class Whales extends OpMode{
                 break;
 
             case 50: // forward for 1.5 seconds
-                moveHelper.driveForward(1.5);
-                if (getRuntime() > lastTime + 1.5) {
+                moveHelper.driveForward(1);
+                if (moveHelper.getEncoderValue() > 2900)  {
                     lastTime = getRuntime();
                     state = 60;
                 }
@@ -88,7 +99,7 @@ public class Whales extends OpMode{
                 break;
             case 70: // turn left for .25 seconds
                 moveHelper.turn(-.25);
-                if (getRuntime() > lastTime + 0.5) {
+                if (getRuntime() > lastTime + 0.29) {
                     lastTime = getRuntime();
                     state = 80;
                 }
@@ -111,14 +122,14 @@ public class Whales extends OpMode{
                 moveHelper.driveForward(0);
                 if (getRuntime() > lastTime + .25) {
                     lastTime = getRuntime();
-                    state = 110;
+                    state = 999;
                 }
                 break;
         }
 
 
         telemetry.addData("State", state);
-        telemetry.addData("BR Encoder", moveHelper.GetBRMotorPosition());
+        moveHelper.showEncoderValues();
         telemetry.update();
 
 
