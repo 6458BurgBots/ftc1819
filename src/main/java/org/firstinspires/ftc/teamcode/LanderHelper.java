@@ -20,6 +20,14 @@ public class LanderHelper extends NoOperationHelper {
         armMotor  = hardwareMap.dcMotor.get("arm");
     }
 
+    public void raiseArm(double power){
+        armMotor.setPower(power);
+    }
+
+    public int getPosition(){
+        return armMotor.getCurrentPosition();
+    }
+
     public void checkTeleOp(Gamepad gamepad1, Gamepad gamepad2){
         // alaina is struggling to find a way to describe this
         // Maybe Ms. Stehno can help...
