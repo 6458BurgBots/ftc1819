@@ -8,12 +8,15 @@ public class Muffin extends OpMode{
 
     MoveHelper moveHelper;
     LanderHelper landerHelper;
+    Mark mark;
     public void init (){
         moveHelper = new MoveHelper(telemetry, hardwareMap);
         moveHelper.init();
        //something will happen here
         landerHelper = new LanderHelper(telemetry, hardwareMap);
         landerHelper.init();
+        mark = new Mark(telemetry, hardwareMap);
+        mark.init();
     }
 
     public void loop(){
@@ -27,6 +30,13 @@ public class Muffin extends OpMode{
         if (gamepad1.left_trigger > 0){
             moveHelper.runWithoutEncoders();
             landerHelper.runWithoutEncoders();
+        }
+
+        if(gamepad2.y){
+            mark.open();
+        }
+        if(gamepad2.x){
+            mark.close();
         }
     }
 

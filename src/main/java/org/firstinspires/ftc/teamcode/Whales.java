@@ -16,6 +16,7 @@ public class Whales extends OpMode{
 
     MoveHelper moveHelper;
     LanderHelper landerHelper;
+    Mark markHelper;
     protected int state;
     protected double lastTime;// double is a data type like float, but allows for more precision (more decimal places)
                                 // protected so that we can only use it in other classes that have derived from whales
@@ -26,6 +27,8 @@ public class Whales extends OpMode{
         moveHelper.init();
         landerHelper = new LanderHelper (telemetry,hardwareMap);
         landerHelper.init();
+        markHelper = new Mark(telemetry, hardwareMap);
+        markHelper.init();
         state = 0;
         lastTime = 0;
         //something will happen here
@@ -48,22 +51,33 @@ public class Whales extends OpMode{
         switch (state) {
             case 0:
                 lastTime = getRuntime();
-                state = 190;
+                state = 40;
                 break;
+
             case 40:
-                landerHelper.raiseArm(SLOW_POWER);
-                if(landerHelper.getPosition()>UPPER_LIMIT){
-                    state = 50;
-                }
+                landerHelper.resetEncoders();
+                advanceToStateAfterTime(50, 0.1);
                 break;
-            case 50:
-                landerHelper.raiseArm(0);
-                state = 190;
+
+            case 50: //lowers arm/robot
+                landerHelper.runMotorsToPosition(9900);
+                advanceToStateAfterTime(60, 6);
+                break;
+
+            case 60: //reset encoders/stop
+                landerHelper.resetEncoders();
+                moveHelper.resetEncoders();
+                advanceToStateAfterTime(70, 0.1);
+                break;
+
+            case 70: //shifts to the robot's right
+                moveHelper.runMotorsToPosition(400,-400,-400,400);
+                advanceToStateAfterTime(190, .75);
                 break;
 
             case 190: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(200, 0.5);
+                advanceToStateAfterTime(200, 0.1);
                 break;
 
             case 200://first move out towards crater
@@ -73,7 +87,7 @@ public class Whales extends OpMode{
 
             case 210: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(220, 0.5);
+                advanceToStateAfterTime(220, 0.1);
                 break;
 
             case 220://turn left
@@ -83,7 +97,7 @@ public class Whales extends OpMode{
 
             case 230: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(240, 0.5);
+                advanceToStateAfterTime(240, 0.1);
                 break;
 
             case 240://forward towards side wall
@@ -93,7 +107,7 @@ public class Whales extends OpMode{
 
             case 250: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(260, 0.5);
+                advanceToStateAfterTime(260, 0.1);
                 break;
 
             case 260://turn to face depot
@@ -103,7 +117,7 @@ public class Whales extends OpMode{
 
             case 270: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(280, 0.5);
+                advanceToStateAfterTime(280, 0.1);
                 break;
 
             case 280://move forward into depot
@@ -113,9 +127,28 @@ public class Whales extends OpMode{
 
             case 290: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(666, 0.5);
+                advanceToStateAfterTime(400, 0.1);
                 break;
-    }
+
+            case 400: // shove marker off
+                markHelper.open();
+                advanceToStateAfterTime(410, .5);
+                break;
+
+            case 410: // close servo arm
+                markHelper.close();
+                advanceToStateAfterTime(500, .1);
+                break;
+
+            case 500: // back up into crater
+                moveHelper.runMotorsToPosition(-8000,-8000,-8000,-8000);
+                advanceToStateAfterTime(510, 5.5);
+
+            case 510: //stop
+                moveHelper.resetEncoders();
+                advanceToStateAfterTime(666, 0.1);
+                break;
+        }
 
 
         telemetry.addData("State", state);

@@ -15,16 +15,14 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class MoveHelper extends NoOperationHelper {
 
-    private static double MARKER_SERVO_CLOSED = 0;
-    private static double MARKER_SERVO_OPEN = .0;
 
+    private static final double ENCODER_POWER_LEVEL = 1;
 // declares the motors; gives them names we will use to call them later
     protected DcMotor FLMotor;
     protected DcMotor FRMotor;
     protected DcMotor BLMotor;
     protected DcMotor BRMotor;
     private boolean isPositionValid;
-    //protected Servo MarkerServo;
     MoveHelper(Telemetry t, HardwareMap h)
     {
         super(t, h);
@@ -36,9 +34,7 @@ public class MoveHelper extends NoOperationHelper {
         FRMotor = hardwareMap.dcMotor.get("RF");
         BLMotor = hardwareMap.dcMotor.get("LB");
         BRMotor = hardwareMap.dcMotor.get("RB");
-        //MarkerServo = hardwareMap.servo.get("MarkerServo");
 
-       // MarkerServo.setPosition(MARKER_SERVO_CLOSED);
 
 
         // setting directions/telling them we are using encoders
@@ -77,7 +73,6 @@ public class MoveHelper extends NoOperationHelper {
         BRMotor.setPower(-rx);
     }
 
-//    public void moveMarkerServo(double position){MarkerServo.setPosition(position);}
 
     // actually turns on the motors/sets power??
     public void runFLMotor (double power){
@@ -144,7 +139,7 @@ public class MoveHelper extends NoOperationHelper {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setTargetPosition(position);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(.8);
+        motor.setPower(ENCODER_POWER_LEVEL);
     }
 
     public void runMotorsToPosition(int flPos, int frPos, int blPos, int brPos){
@@ -156,6 +151,8 @@ public class MoveHelper extends NoOperationHelper {
              isPositionValid = true;
         }
     }
+
+
 
     public void checkTeleOp(Gamepad gamepad1,Gamepad gamepad2){
         // alaina is struggling to find a way to describe this
@@ -204,12 +201,7 @@ public class MoveHelper extends NoOperationHelper {
             FRMotor.setPower(.3);
         }
 
-        if(gamepad2.b){
-           // moveMarkerServo(MARKER_SERVO_OPEN);
-        }
-        if(gamepad2.x){
-           // moveMarkerServo(MARKER_SERVO_CLOSED);
-        }
+
     }
     public int GetBRMotorPosition(){
         return BRMotor.getCurrentPosition();

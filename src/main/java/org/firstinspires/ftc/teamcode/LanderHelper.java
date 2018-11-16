@@ -9,6 +9,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class LanderHelper extends NoOperationHelper {
     private DcMotor armMotor;
+    private boolean isPositionValid;
 
     LanderHelper(Telemetry t, HardwareMap h)
     {
@@ -34,6 +35,21 @@ public class LanderHelper extends NoOperationHelper {
     }
     public void runWithoutEncoders() {
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+
+    public void runOneMotor(DcMotor motor, int position){
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setTargetPosition(position);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(.8);
+    }
+
+    public void runMotorsToPosition(int armPos){
+        if (!isPositionValid) {
+            runOneMotor(armMotor, armPos);
+            isPositionValid = true;
+        }
     }
 
     public void checkTeleOp(Gamepad gamepad1, Gamepad gamepad2){
