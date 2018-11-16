@@ -23,7 +23,8 @@ public class MoveHelper extends NoOperationHelper {
     protected DcMotor FRMotor;
     protected DcMotor BLMotor;
     protected DcMotor BRMotor;
-    protected Servo MarkerServo;
+    private boolean isPositionValid;
+    //protected Servo MarkerServo;
     MoveHelper(Telemetry t, HardwareMap h)
     {
         super(t, h);
@@ -35,18 +36,18 @@ public class MoveHelper extends NoOperationHelper {
         FRMotor = hardwareMap.dcMotor.get("RF");
         BLMotor = hardwareMap.dcMotor.get("LB");
         BRMotor = hardwareMap.dcMotor.get("RB");
-        MarkerServo = hardwareMap.servo.get("MarkerServo");
+        //MarkerServo = hardwareMap.servo.get("MarkerServo");
 
-        MarkerServo.setPosition(MARKER_SERVO_CLOSED);
+       // MarkerServo.setPosition(MARKER_SERVO_CLOSED);
 
 
         // setting directions/telling them we are using encoders
         FLMotor.setDirection(DcMotor.Direction.REVERSE);
         BLMotor.setDirection(DcMotor.Direction.REVERSE);
-        FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        FLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
     }
     public void omniDrive(double lx,double ly, double rx){
@@ -76,7 +77,7 @@ public class MoveHelper extends NoOperationHelper {
         BRMotor.setPower(-rx);
     }
 
-    public void moveMarkerServo(double position){MarkerServo.setPosition(position);}
+//    public void moveMarkerServo(double position){MarkerServo.setPosition(position);}
 
     // actually turns on the motors/sets power??
     public void runFLMotor (double power){
@@ -114,12 +115,20 @@ public class MoveHelper extends NoOperationHelper {
         BLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FRMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         FLMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        isPositionValid = false;
     }
     public void runUsingEncoders (){
         BRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         BLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FRMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         FLMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void runWithoutEncoders(){
+        BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        BLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        FLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
     public void moveToPosition (int position){
         FLMotor.setTargetPosition(position);
@@ -131,11 +140,41 @@ public class MoveHelper extends NoOperationHelper {
 
     }
 
+    public void runOneMotor(DcMotor motor, int position){
+        motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        motor.setTargetPosition(position);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(.8);
+    }
+
+    public void runMotorsToPosition(int flPos, int frPos, int blPos, int brPos){
+        if (!isPositionValid) {
+             runOneMotor(FLMotor, flPos);
+             runOneMotor(FRMotor, frPos);
+             runOneMotor(BRMotor, brPos);
+             runOneMotor(BLMotor, blPos);
+             isPositionValid = true;
+        }
+    }
+
     public void checkTeleOp(Gamepad gamepad1,Gamepad gamepad2){
         // alaina is struggling to find a way to describe this
-        float LY = -gamepad1.left_stick_y;
-        float LX = gamepad1.left_stick_x;
-        float RX = gamepad1.right_stick_x;
+        double LY = -gamepad1.left_stick_y;
+        double LX = gamepad1.left_stick_x;
+        double RX = -gamepad1.right_stick_x;
+
+     /*   if (gamepad1.y) {
+            LY = 0.5;
+        }
+        if (gamepad1.a) {
+            LY = -.5;
+        }
+        if (gamepad1.x) {
+            RX = -.5;
+        }
+        if (gamepad1.b) {
+            RX = .5;
+        }*/
 
 
         //Establishes floating variables linked to the gamepads
@@ -166,10 +205,10 @@ public class MoveHelper extends NoOperationHelper {
         }
 
         if(gamepad2.b){
-            moveMarkerServo(MARKER_SERVO_OPEN);
+           // moveMarkerServo(MARKER_SERVO_OPEN);
         }
         if(gamepad2.x){
-            moveMarkerServo(MARKER_SERVO_CLOSED);
+           // moveMarkerServo(MARKER_SERVO_CLOSED);
         }
     }
     public int GetBRMotorPosition(){

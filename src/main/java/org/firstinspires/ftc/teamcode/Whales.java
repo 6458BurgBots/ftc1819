@@ -48,7 +48,7 @@ public class Whales extends OpMode{
         switch (state) {
             case 0:
                 lastTime = getRuntime();
-                state = 5;
+                state = 190;
                 break;
             case 40:
                 landerHelper.raiseArm(SLOW_POWER);
@@ -61,89 +61,61 @@ public class Whales extends OpMode{
                 state = 190;
                 break;
 
-            case 190:
+            case 190: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(200, .5);
+                advanceToStateAfterTime(200, 0.5);
                 break;
 
-            case 200:
-                moveHelper.runUsingEncoders();
-                advanceToStateAfterTime(210, .5);
+            case 200://first move out towards crater
+                moveHelper.runMotorsToPosition(1600,1600,1600,1600);
+                advanceToStateAfterTime(210, 2.0);
                 break;
 
-            case 210: // move out from landing spot
-               moveHelper.driveForward(.5);
-                if (moveHelper.getEncoderValue() > 800) {
-                    lastTime = getRuntime();
-                    state = 220;
-               }
-                //advanceToStateAfterTime(20, 1);
-                break;
-            case 220: // stop for .25 seconds
-                moveHelper.driveForward(0);
-                if (getRuntime() > lastTime + .25) {
-                    lastTime = getRuntime();
-                    state = 230;
-                }
-                break;
-            case 230: // turn left for .5 seconds
-                moveHelper.turn(-.5);
-                if (getRuntime() > lastTime + 0.5) {
-                    lastTime = getRuntime();
-                    state = 240;
-                }
-                break;
-            case 240: // stop turning for .3 seconds
-                moveHelper.turn(0);
-                if (getRuntime() > lastTime + .30) {
-                    lastTime = getRuntime();
-                    state = 250;
-                }
+            case 210: //stop
+                moveHelper.resetEncoders();
+                advanceToStateAfterTime(220, 0.5);
                 break;
 
-            case 250: // forward for 1.5 seconds
-                moveHelper.driveForward(1);
-                if (moveHelper.getEncoderValue() > 2900)  {
-                    lastTime = getRuntime();
-                    state = 260;
-                }
+            case 220://turn left
+                moveHelper.runMotorsToPosition(-1700,1700,-1700,1700);
+                advanceToStateAfterTime(230, 2.0);
                 break;
-            case 260: // stop for .25 seconds
-                moveHelper.driveForward(0);
-                if (getRuntime() > lastTime + .25) {
-                    lastTime = getRuntime();
-                    state = 270;
-                }
+
+            case 230: //stop
+                moveHelper.resetEncoders();
+                advanceToStateAfterTime(240, 0.5);
                 break;
-            case 270: // turn left for .25 seconds
-                moveHelper.turn(-.25);
-                if (getRuntime() > lastTime + 0.29) {
-                    lastTime = getRuntime();
-                    state = 280;
-                }
+
+            case 240://forward towards side wall
+                moveHelper.runMotorsToPosition(2600,2600,2600,2600);
+                advanceToStateAfterTime(250, 2.0);
                 break;
-            case 280: // stop for .3
-                moveHelper.turn(0);
-                if (getRuntime() > lastTime + .30) {
-                    lastTime = getRuntime();
-                    state = 290;
-                }
+
+            case 250: //stop
+                moveHelper.resetEncoders();
+                advanceToStateAfterTime(260, 0.5);
                 break;
-            case 290: // forward for 2 seconds
-                moveHelper.driveForward(1.5);
-                if (getRuntime() > lastTime + 2) {
-                    lastTime = getRuntime();
-                    state =300;
-                }
+
+            case 260://turn to face depot
+                moveHelper.runMotorsToPosition(-1300,1300,-1300,1300);
+                advanceToStateAfterTime(270, 2.0);
                 break;
-            case 300: // stop for .25 seconds
-                moveHelper.driveForward(0);
-                if (getRuntime() > lastTime + .25) {
-                    lastTime = getRuntime();
-                    state = 999;
-                }
+
+            case 270: //stop
+                moveHelper.resetEncoders();
+                advanceToStateAfterTime(280, 0.5);
                 break;
-        }
+
+            case 280://move forward into depot
+                moveHelper.runMotorsToPosition(5550,5550,5550,5550);
+                advanceToStateAfterTime(290, 3.5);
+                break;
+
+            case 290: //stop
+                moveHelper.resetEncoders();
+                advanceToStateAfterTime(666, 0.5);
+                break;
+    }
 
 
         telemetry.addData("State", state);
