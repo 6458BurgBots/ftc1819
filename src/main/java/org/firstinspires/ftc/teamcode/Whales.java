@@ -60,7 +60,7 @@ public class Whales extends OpMode{
                 break;
 
             case 50: //lowers arm/robot
-                landerHelper.runMotorsToPosition(9900);
+                landerHelper.runMotorsToPosition(9950);
                 advanceToStateAfterTime(60, 6);
                 break;
 
@@ -81,7 +81,7 @@ public class Whales extends OpMode{
                 break;
 
             case 200://first move out towards crater
-                moveHelper.runMotorsToPosition(1600,1600,1600,1600);
+                moveHelper.runMotorsToPosition(1300,1300,1300,1300);
                 advanceToStateAfterTime(210, 2.0);
                 break;
 
@@ -102,7 +102,7 @@ public class Whales extends OpMode{
 
             case 240://forward towards side wall
                 moveHelper.runMotorsToPosition(2600,2600,2600,2600);
-                advanceToStateAfterTime(250, 2.0);
+                advanceToStateAfterTime(250, 1.75);
                 break;
 
             case 250: //stop
@@ -111,8 +111,8 @@ public class Whales extends OpMode{
                 break;
 
             case 260://turn to face depot
-                moveHelper.runMotorsToPosition(-1300,1300,-1300,1300);
-                advanceToStateAfterTime(270, 2.0);
+                moveHelper.runMotorsToPosition(-1100,1100,-1100,1100);
+                advanceToStateAfterTime(270, 1.75);
                 break;
 
             case 270: //stop
@@ -122,7 +122,7 @@ public class Whales extends OpMode{
 
             case 280://move forward into depot
                 moveHelper.runMotorsToPosition(5550,5550,5550,5550);
-                advanceToStateAfterTime(290, 3.5);
+                advanceToStateAfterTime(290, 3.0);
                 break;
 
             case 290: //stop
@@ -132,7 +132,7 @@ public class Whales extends OpMode{
 
             case 400: // shove marker off
                 markHelper.open();
-                advanceToStateAfterTime(410, .5);
+                advanceToStateAfterTime(410, 1);
                 break;
 
             case 410: // close servo arm
@@ -143,10 +143,10 @@ public class Whales extends OpMode{
             case 500: // back up into crater
                 moveHelper.runMotorsToPosition(-8000,-8000,-8000,-8000);
                 advanceToStateAfterTime(510, 5.5);
-
+                break;
             case 510: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(666, 0.1);
+                advanceToStateAfterTime(999, 0.1);
                 break;
         }
 
