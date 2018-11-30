@@ -81,7 +81,7 @@ public class Whales extends OpMode{
                 break;
 
             case 200://first move out towards crater
-                moveHelper.runMotorsToPosition(1300,1300,1300,1300);
+                moveHelper.runMotorsToPosition(1200,1200,1200,1200);
                 advanceToStateAfterTime(210, 2.0);
                 break;
 
@@ -101,7 +101,7 @@ public class Whales extends OpMode{
                 break;
 
             case 240://forward towards side wall
-                moveHelper.runMotorsToPosition(2600,2600,2600,2600);
+                moveHelper.runMotorsToPosition(3000,3000,3000,3000);
                 advanceToStateAfterTime(250, 1.75);
                 break;
 
