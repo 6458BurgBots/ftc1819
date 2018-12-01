@@ -19,6 +19,7 @@ public class MineralArmHelper extends NoOperationHelper {
     public static double MINERAL_SERVO_CLOSED = 0;
     public static double MINERAL_SERVO_OPEN = 1;
     protected Servo mineralServo;
+    protected Servo elbowServo;
 
     MineralArmHelper(Telemetry t, HardwareMap h)
     {
@@ -38,33 +39,48 @@ public class MineralArmHelper extends NoOperationHelper {
 
         mineralServo = hardwareMap.servo.get("Mineral Servo");
         servoPosition = MINERAL_SERVO_CLOSED;
-    }
 
-    public void moveElbow(double power) {
-        elbowMotor.setPower(power);
-    }
-
-    public void moveMarkerServo(double position){
-        mineralServo.setPosition(position);
-    }
-
-    public void open(){
-        mineralServo.setPosition(MINERAL_SERVO_OPEN);
-    }
-
-    public void close(){
-        mineralServo.setPosition(MINERAL_SERVO_CLOSED);
-    }
-
-    public void resetEncoders() {
-        elbowMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    }
-    public void runWithoutEncoders() {
-        elbowMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        elbowServo = hardwareMap.servo.get("elbowServo");
+        servoPosition = MINERAL_SERVO_CLOSED;
     }
 
     public void checkTeleOp(Gamepad gamepad1, Gamepad gamepad2){
-       // elbowMotor.setPower(gamepad2.left_stick_y);
+        //moveElbowMotor(gamepad2);
+        moveElbowServo(gamepad2);
+        moveShoulderMotor(gamepad2);
+
+
+        mineralServo(gamepad2);
+    }
+
+    private void mineralServo(Gamepad gamepad2) {
+        if (gamepad2.left_trigger > 0) {
+            servoPosition += gamepad2.left_trigger / 10;
+        } else if (gamepad2.right_trigger > 0) {
+            servoPosition -= gamepad2.right_trigger / 10;
+        } else if (gamepad2.right_bumper) {
+            servoPosition = MINERAL_SERVO_CLOSED;
+        }
+        servoPosition = Range.clip(servoPosition, MINERAL_SERVO_CLOSED,MINERAL_SERVO_OPEN);
+
+        mineralServo.setPosition(servoPosition);
+    }
+
+    private void moveShoulderMotor(Gamepad gamepad2) {
+        int currPosition;// shoulderMotor.setPower(gamepad2.right_stick_y);
+        shoulderPosition = shoulderPosition + gamepad2.right_stick_y * 7;
+        currPosition = shoulderMotor.getCurrentPosition();
+        shoulderPosition = Range.clip(shoulderPosition, currPosition - 25,currPosition + 25);
+
+        shoulderMotor.setTargetPosition((int)shoulderPosition);
+        shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        shoulderMotor.setPower(1);
+        telemetry.addData("Shoulder Encoder: ", shoulderMotor.getCurrentPosition());
+        telemetry.addData("Desired Shoulder", shoulderPosition);
+    }
+
+    private void moveElbowMotor(Gamepad gamepad2) {
+        // elbowMotor.setPower(gamepad2.left_stick_y);
         elbowPosition = elbowPosition - gamepad2.left_stick_y * 5;
         int currPosition = elbowMotor.getCurrentPosition();
         elbowPosition = Range.clip(elbowPosition, currPosition - 10,currPosition + 10);
@@ -73,29 +89,13 @@ public class MineralArmHelper extends NoOperationHelper {
         elbowMotor.setPower(1);
         telemetry.addData("Elbow Encoder: ", elbowMotor.getCurrentPosition());
         telemetry.addData("Desired Elbow", elbowPosition);
+    }
 
-       // shoulderMotor.setPower(gamepad2.right_stick_y);
-        shoulderPosition = shoulderPosition + gamepad2.right_stick_y * 7;
-        currPosition = shoulderMotor.getCurrentPosition();
-        shoulderPosition = Range.clip(shoulderPosition, currPosition - 50,currPosition + 50);
-
-        shoulderMotor.setTargetPosition((int)shoulderPosition);
-        shoulderMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        shoulderMotor.setPower(1);
-        telemetry.addData("Shoulder Encoder: ", shoulderMotor.getCurrentPosition());
-        telemetry.addData("Desired Shoulder", shoulderPosition);
-
-        if (gamepad2.left_trigger > 0) {
-            servoPosition += gamepad2.left_trigger / 10;
-        } else if (gamepad2.right_trigger > 0) {
-            servoPosition -= gamepad2.right_trigger / 10;
-        } else if (gamepad2.right_bumper) {
-            servoPosition = MINERAL_SERVO_CLOSED;
-        }/* else if (gamepad2.right_bumper) {
-            mineralServo.setPosition(.5);
-        }*/
-        servoPosition = Range.clip(servoPosition, MINERAL_SERVO_CLOSED,MINERAL_SERVO_OPEN);
-
-        mineralServo.setPosition(servoPosition);
+    private void moveElbowServo(Gamepad gamepad2) {
+        elbowPosition = elbowPosition + gamepad2.left_stick_y /20;
+        elbowPosition = Range.clip(elbowPosition, MINERAL_SERVO_CLOSED,MINERAL_SERVO_OPEN);
+        elbowServo.setPosition(elbowPosition);
+        telemetry.addData("Elbow Encoder: ", elbowMotor.getCurrentPosition());
+        telemetry.addData("Desired Elbow", elbowPosition);
     }
 }
