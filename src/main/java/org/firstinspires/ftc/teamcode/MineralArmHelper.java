@@ -18,6 +18,8 @@ public class MineralArmHelper extends NoOperationHelper {
     double servoPosition;
     public static double MINERAL_SERVO_CLOSED = 0;
     public static double MINERAL_SERVO_OPEN = 1;
+    public static double MINERAL_SERVO_HOME = 1;
+    public static double ELBOW_SERVO_HOME = .07;
     protected Servo mineralServo;
     protected Servo elbowServo;
 
@@ -38,10 +40,12 @@ public class MineralArmHelper extends NoOperationHelper {
         shoulderPosition = shoulderMotor.getCurrentPosition();
 
         mineralServo = hardwareMap.servo.get("Mineral Servo");
-        servoPosition = MINERAL_SERVO_CLOSED;
+        servoPosition = MINERAL_SERVO_HOME;
+        mineralServo.setPosition(servoPosition);
 
         elbowServo = hardwareMap.servo.get("elbowServo");
-        servoPosition = MINERAL_SERVO_CLOSED;
+        elbowPosition = ELBOW_SERVO_HOME;
+        elbowServo.setPosition(elbowPosition);
     }
 
     public void checkTeleOp(Gamepad gamepad1, Gamepad gamepad2){
@@ -78,6 +82,12 @@ public class MineralArmHelper extends NoOperationHelper {
         telemetry.addData("Shoulder Encoder: ", shoulderMotor.getCurrentPosition());
         telemetry.addData("Desired Shoulder", shoulderPosition);
     }
+    private void moveShoulderMotorPowerOnly(Gamepad gamepad2) {
+        shoulderPosition = shoulderPosition + gamepad2.right_stick_y * 7;
+        shoulderMotor.setPower(gamepad2.right_stick_y);
+        telemetry.addData("Shoulder Encoder: ", shoulderMotor.getCurrentPosition());
+        telemetry.addData("Desired Shoulder", shoulderPosition);
+    }
 
     private void moveElbowMotor(Gamepad gamepad2) {
         // elbowMotor.setPower(gamepad2.left_stick_y);
@@ -92,7 +102,7 @@ public class MineralArmHelper extends NoOperationHelper {
     }
 
     private void moveElbowServo(Gamepad gamepad2) {
-        elbowPosition = elbowPosition + gamepad2.left_stick_y /20;
+        elbowPosition = elbowPosition + gamepad2.left_stick_y /30;
         elbowPosition = Range.clip(elbowPosition, MINERAL_SERVO_CLOSED,MINERAL_SERVO_OPEN);
         elbowServo.setPosition(elbowPosition);
         telemetry.addData("Elbow Encoder: ", elbowMotor.getCurrentPosition());
