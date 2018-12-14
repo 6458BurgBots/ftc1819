@@ -136,7 +136,7 @@ public class GoldieBlocks extends OpMode{
                 break;
 
             case 254:
-                moveHelper.encoderPowerLevel = 0;
+                moveHelper.encoderPowerLevel = 0; // because this is zero, we are just setting the position into the encoders
                 moveHelper.runMotorsToPosition(6000,6000,6000,6000);
                 state=255;
                 break;
@@ -146,7 +146,7 @@ public class GoldieBlocks extends OpMode{
                     state = 256;
                 } else {
                     moveHelper.encoderPowerLevel = .3;
-                    moveHelper.continueToPosition();
+                    moveHelper.continueToPosition();  // Now run to the position that was set in step 254
                     advanceToStateAfterTime(280, 3); // time out in case we don't see anything, ever
                 }
                 //else {
@@ -162,8 +162,8 @@ public class GoldieBlocks extends OpMode{
 
             case 257: //drive forward
                 moveHelper.encoderPowerLevel = .5;
-                moveHelper.continueToPosition();
-                advanceToStateAfterTime(258, 1);
+                moveHelper.continueToPosition();   // Now run to the position that was set in step 254
+                advanceToStateAfterTime(258, 1);  // for only one second
                 telemetry.addData("Arm Status: ", "forward");
                 break;
 
@@ -177,9 +177,9 @@ public class GoldieBlocks extends OpMode{
                 telemetry.addData("Arm Status: ", "raising");
                 break;
 
-            case 270: //stop
+            case 270: //Continue to fixed location before turning to depot
                 moveHelper.encoderPowerLevel = 1;
-                moveHelper.continueToPosition();
+                moveHelper.continueToPosition();// Now finish running to the position that was set in step 254
                 advanceToStateAfterTime(99999999, 3);
                 telemetry.addData("Arm Status: ", "continuing");
                 break;
