@@ -132,56 +132,60 @@ public class GoldieBlocks extends OpMode{
             case 250: //stop
                 moveHelper.resetEncoders();
                 //moveHelper.runWithoutEncoders();
-                advanceToStateAfterTime(254, 0.1);
+                advanceToStateAfterTime(260, 0.1);
                 break;
 
-            case 254:
+            case 260:
                 moveHelper.encoderPowerLevel = 0; // because this is zero, we are just setting the position into the encoders
                 moveHelper.runMotorsToPosition(6000,6000,6000,6000);
-                state=255;
+                state=270;
                 break;
 
-            case 255: //check the 1st mineral
+            case 270: //check the 1st mineral
                 if(detector.isFound()){
-                    state = 256;
+                    state = 280;
                 } else {
                     moveHelper.encoderPowerLevel = .3;
                     moveHelper.continueToPosition();  // Now run to the position that was set in step 254
-                    advanceToStateAfterTime(280, 3); // time out in case we don't see anything, ever
+                    advanceToStateAfterTime(400, 3); // time out in case we don't see anything, ever
                 }
                 //else {
                 //    state = 260;
                 //}
                 break;
 
-            case 256: //lower arm
+            case 280: //lower arm
                 moveHelper.encoderPowerLevel = .5;
-                advanceToStateAfterTime(257, 1);
+                advanceToStateAfterTime(290, 1);
                 telemetry.addData("Arm Status: ", "lowering");
                 break;
 
-            case 257: //drive forward
+            case 290: //drive forward
                 moveHelper.encoderPowerLevel = .5;
                 moveHelper.continueToPosition();   // Now run to the position that was set in step 254
-                advanceToStateAfterTime(258, 1);  // for only one second
+                advanceToStateAfterTime(300, 1);  // for only one second
                 telemetry.addData("Arm Status: ", "forward");
                 break;
 
-            case 258: //stop
+            case 300: //stop
                 moveHelper.driveForward(0);  // force a stop
-                advanceToStateAfterTime(259, 0.1);
+                advanceToStateAfterTime(310, 0.1);
                 break;
 
-            case 259: //raise arm
-                advanceToStateAfterTime(270, 1);
+            case 310: //raise arm
+                advanceToStateAfterTime(400, 1);
                 telemetry.addData("Arm Status: ", "raising");
                 break;
 
-            case 270: //Continue to fixed location before turning to depot
+            case 400: //Continue to fixed location before turning to depot
                 moveHelper.encoderPowerLevel = 1;
                 moveHelper.continueToPosition();// Now finish running to the position that was set in step 254
-                advanceToStateAfterTime(99999999, 3);
+                advanceToStateAfterTime(410, 3);
                 telemetry.addData("Arm Status: ", "continuing");
+                break;
+            case 410:
+                moveHelper.driveForward(0);  // force a stop
+                advanceToStateAfterTime(9999999, 0.1);
                 break;
         }
 
