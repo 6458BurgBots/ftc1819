@@ -130,7 +130,7 @@ public class MoveHelper extends NoOperationHelper {
     public void moveToPosition (int position){
         FLMotor.setTargetPosition(position);
         FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-}
+    }
 
     public int getEncoderValue(){
         return FLMotor.getCurrentPosition();
@@ -142,20 +142,32 @@ public class MoveHelper extends NoOperationHelper {
         motor.setTargetPosition(position);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         motor.setPower(encoderPowerLevel);
+    }
 
+    public void continueOneMotor(DcMotor motor){
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(encoderPowerLevel);
+        telemetry.addData("Continue target: " + motor.getDeviceName(),motor.getTargetPosition());
     }
 
     public void runMotorsToPosition(int flPos, int frPos, int blPos, int brPos){
         if (!isPositionValid) {
-             runOneMotor(FLMotor, flPos);
-             runOneMotor(FRMotor, frPos);
-             runOneMotor(BRMotor, brPos);
-             runOneMotor(BLMotor, blPos);
-             isPositionValid = true;
+            runOneMotor(FLMotor, flPos);
+            runOneMotor(FRMotor, frPos);
+            runOneMotor(BRMotor, brPos);
+            runOneMotor(BLMotor, blPos);
+            isPositionValid = true;
         }
     }
 
-
+    public void continueToPosition(){
+        if (isPositionValid) {
+            continueOneMotor(FLMotor);
+            continueOneMotor(FRMotor);
+            continueOneMotor(BRMotor);
+            continueOneMotor(BLMotor);
+        }
+    }
 
     public void checkTeleOp(Gamepad gamepad1,Gamepad gamepad2){
         // alaina is struggling to find a way to describe this

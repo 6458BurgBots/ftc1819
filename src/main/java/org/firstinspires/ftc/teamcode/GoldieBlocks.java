@@ -125,65 +125,64 @@ public class GoldieBlocks extends OpMode{
                 break;
 
                 case 240: //move back
-                moveHelper.runMotorsToPosition(-1850,-1850,-1850,-1850);
+                moveHelper.runMotorsToPosition(-1900,-1900,-1900,-1900);
                 advanceToStateAfterTime(250, 2.0);
                 break;
 
             case 250: //stop
                 moveHelper.resetEncoders();
-                moveHelper.runWithoutEncoders();
-                advanceToStateAfterTime(255, 0.1);
+                //moveHelper.runWithoutEncoders();
+                advanceToStateAfterTime(254, 0.1);
+                break;
+
+            case 254:
+                moveHelper.encoderPowerLevel = 0;
+                moveHelper.runMotorsToPosition(6000,6000,6000,6000);
+                state=255;
                 break;
 
             case 255: //check the 1st mineral
-                moveHelper.encoderPowerLevel = .5;
                 if(detector.isFound()){
                     state = 256;
-                }else {
-                    state = 260;
+                } else {
+                    moveHelper.encoderPowerLevel = .3;
+                    moveHelper.continueToPosition();
+                    advanceToStateAfterTime(280, 3); // time out in case we don't see anything, ever
                 }
+                //else {
+                //    state = 260;
+                //}
                 break;
 
             case 256: //lower arm
                 moveHelper.encoderPowerLevel = .5;
-                advanceToStateAfterTime(257, .2);
+                advanceToStateAfterTime(257, 1);
+                telemetry.addData("Arm Status: ", "lowering");
                 break;
 
             case 257: //drive forward
                 moveHelper.encoderPowerLevel = .5;
-                moveHelper.driveForward(.5);
-                advanceToStateAfterTime(258, .5);
+                moveHelper.continueToPosition();
+                advanceToStateAfterTime(258, 1);
+                telemetry.addData("Arm Status: ", "forward");
                 break;
 
             case 258: //stop
-                moveHelper.encoderPowerLevel = .5;
                 moveHelper.driveForward(0);  // force a stop
                 advanceToStateAfterTime(259, 0.1);
                 break;
 
             case 259: //raise arm
-                moveHelper.encoderPowerLevel = .5;
-                advanceToStateAfterTime(270, 0.2);
-                break;
-
-            case 260: //moves forward, looking for mineral
-                moveHelper.encoderPowerLevel = .5;
-                moveHelper.driveForward(.5);
-                advanceToStateAfterTime(270, 3.0);
-                if (detector.getAligned()){
-                    state = 270;
-                }else{
-                    state = 255;
-                }
+                advanceToStateAfterTime(270, 1);
+                telemetry.addData("Arm Status: ", "raising");
                 break;
 
             case 270: //stop
                 moveHelper.encoderPowerLevel = 1;
-                moveHelper.driveForward(0);  // force a stop
-//                moveHelper.runMotorsToPosition(3000,3000,3000,3000);
-                advanceToStateAfterTime(99999999, 0.1);
+                moveHelper.continueToPosition();
+                advanceToStateAfterTime(99999999, 3);
+                telemetry.addData("Arm Status: ", "continuing");
                 break;
-
         }
 
 
