@@ -187,6 +187,10 @@ public class GoldieBlocks extends OpMode{
                 moveHelper.driveForward(0);  // force a stop
                 advanceToStateAfterTime(9999999, 0.1);
                 break;
+                // Next you need to copy all steps from 260 and on from WHALES.
+            // Obviously renumber them starting with 420 here.  KEEP COMMENTING!
+            // 260 needs to be adjusted, you probably won't turn quite as far.
+            // Just add one step at a time until you're in the depot
         }
 
 
