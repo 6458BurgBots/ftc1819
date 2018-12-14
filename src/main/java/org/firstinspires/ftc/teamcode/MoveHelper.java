@@ -23,6 +23,7 @@ public class MoveHelper extends NoOperationHelper {
     protected DcMotor BLMotor;
     protected DcMotor BRMotor;
     private boolean isPositionValid;
+    public double encoderPowerLevel = 1;
     MoveHelper(Telemetry t, HardwareMap h)
     {
         super(t, h);
@@ -87,6 +88,7 @@ public class MoveHelper extends NoOperationHelper {
     public void runBRMotor (double power){
         BRMotor.setPower(power);
     }
+
     public void driveForward (double power){
         FLMotor.setPower(power);
         FRMotor.setPower(power);
@@ -139,7 +141,8 @@ public class MoveHelper extends NoOperationHelper {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setTargetPosition(position);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(ENCODER_POWER_LEVEL);
+        motor.setPower(encoderPowerLevel);
+
     }
 
     public void runMotorsToPosition(int flPos, int frPos, int blPos, int brPos){
