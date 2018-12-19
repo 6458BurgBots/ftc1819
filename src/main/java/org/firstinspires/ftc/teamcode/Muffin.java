@@ -10,6 +10,7 @@ public class Muffin extends OpMode{
     LanderHelper landerHelper;
     Mark mark;
     MineralArmHelper mineralArmHelper;
+    SampleHelper sampleHelper;
     public void init (){
         moveHelper = new MoveHelper(telemetry, hardwareMap);
         moveHelper.init();
@@ -20,6 +21,8 @@ public class Muffin extends OpMode{
         mark.init();
         mineralArmHelper = new MineralArmHelper(telemetry,hardwareMap);
         mineralArmHelper.init();
+        sampleHelper = new SampleHelper(telemetry,hardwareMap);
+        sampleHelper.init();
 
 
     }
@@ -38,12 +41,20 @@ public class Muffin extends OpMode{
             landerHelper.runWithoutEncoders();
         }
 
-        if(gamepad2.y){
+       if(gamepad2.y){
             mark.open();
-        }
+       }
         if(gamepad2.x){
             mark.close();
         }
+
+      /*  if (gamepad2.x){
+            sampleHelper.close();
+        }
+
+        if(gamepad2.y){
+            sampleHelper.open();
+        }*/
     }
 
 }
