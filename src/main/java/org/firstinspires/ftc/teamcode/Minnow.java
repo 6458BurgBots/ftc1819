@@ -15,7 +15,8 @@ public class Minnow extends OpMode {
     private static final double SLOW_POWER = 0.5;
     private static final int DETECTION_MOVE = 5978;
     private static final int DEPOT_MOVE = 4130;
-    private static final int DEPOT_TURN = 2900;
+    private static final int DEPOT_TURN = 2800;
+    private static final int FIRST_LEFT_TURN = 1900;
     ;
 
     MoveHelper moveHelper;
@@ -127,7 +128,7 @@ public class Minnow extends OpMode {
                 break;
 
             case 220://turn left
-                moveHelper.runMotorsToPosition(-1800,1800,-1800,1800);
+                moveHelper.runMotorsToPosition(-FIRST_LEFT_TURN,FIRST_LEFT_TURN,-FIRST_LEFT_TURN,FIRST_LEFT_TURN);
                 advanceToStateAfterTime(230, 1.8);
                 break;
 
@@ -234,7 +235,12 @@ public class Minnow extends OpMode {
 
             case 470: // shove marker off
                 markHelper.open();
-                advanceToStateAfterTime(470, 1);
+                advanceToStateAfterTime(480, 1);
+                break;
+
+            case 480: // shove marker off
+                markHelper.close();
+                advanceToStateAfterTime(999, 1);
                 break;
 /*
             case 410: // close servo arm
