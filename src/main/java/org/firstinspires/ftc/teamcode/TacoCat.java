@@ -6,39 +6,41 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@Autonomous(name="Minnow(mineral detect depo)", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
-// name = "Minnow" shows up in the driver's station list
-// group = "Autonomous" refers to which list in the driver's station
-public class Minnow extends OpMode {
+@Autonomous(name="TacoCat", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
+                                            // name = "Whales" shows up in the driver's station list
+                                            // group = "Autonomous" refers to which list in the driver's station
+public class TacoCat extends OpMode{
     private static final int UPPER_LIMIT = 11584;
     private static final int LOWER_LIMIT = 0;
     private static final double SLOW_POWER = 0.5;
-    private static final int DETECTION_MOVE = 5978;
-    private static final int DEPOT_MOVE = 4130;
-    private static final int DEPOT_TURN = 2800;
-    private static final int FIRST_LEFT_TURN = 1900;
-    ;
+
+
 
     MoveHelper moveHelper;
     LanderHelper landerHelper;
     Mark markHelper;
+    SampleHelper sampleHelper;
+    private GoldAlignDetector detector;
     protected int state;
     protected double lastTime;// double is a data type like float, but allows for more precision (more decimal places)
-    // protected so that we can only use it in other classes that have derived from whales
-    private boolean doCrater=true;
-    private GoldAlignDetector detector;
-    SampleHelper sampleHelper;
+                                // protected so that we can only use it in other classes that have derived from whales
 
-    public void init() { // when creating a class derived from OpMode, you must define what happens when init is pressed
-        // you must also define "loop" as part of your framework
+    public void init (){ // when creating a class derived from OpMode, you must define what happens when init is pressed
+                        // you must also define "loop" as part of your framework
         moveHelper = new MoveHelper(telemetry, hardwareMap); // when parameters are purple, that means they are class variables
         moveHelper.init();
-        landerHelper = new LanderHelper(telemetry, hardwareMap);
+        landerHelper = new LanderHelper (telemetry,hardwareMap);
         landerHelper.init();
         markHelper = new Mark(telemetry, hardwareMap);
         markHelper.init();
+        sampleHelper = new SampleHelper(telemetry,hardwareMap);
+        sampleHelper.init();
         state = 0;
         lastTime = 0;
+
+        //from GoldAlignExample, DogeCV
+        telemetry.addData("Status", "DogeCV 2018.0 - Gold Align Example");
+
         // Set up detector
         detector = new GoldAlignDetector(); // Create detector
         detector.init(hardwareMap.appContext, CameraViewDisplay.getInstance()); // Initialize it with the app context and camera
@@ -57,10 +59,7 @@ public class Minnow extends OpMode {
         detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
 
         detector.enable(); // Start the detector!
-        sampleHelper = new SampleHelper(telemetry,hardwareMap);
-        sampleHelper.init();
     }
-
 
     // Noticed that each case was similar, so created a procedure called advancedToStateAfterTime
     // parameters include the newState, which refers to the new value being assigned to state at end of duration
@@ -73,18 +72,9 @@ public class Minnow extends OpMode {
         }
     }
 
-    public void init_loop() {
-        if (gamepad1.y){
-            doCrater=true;
-        }
-        if (gamepad1.a){
-            doCrater=false;
-        }
-        telemetry.addData("Do Crater",doCrater);
-    }
 
+    public void loop(){
 
-        public void loop() {
         switch (state) {
             case 0:
                 lastTime = getRuntime();
@@ -102,13 +92,13 @@ public class Minnow extends OpMode {
                 break;
 
             case 60: //reset encoders/stop
-                //landerHelper.resetEncoders();
-                //moveHelper.resetEncoders();
+                landerHelper.resetEncoders();
+                moveHelper.resetEncoders();
                 advanceToStateAfterTime(70, 0.1);
                 break;
 
             case 70: //shifts to the robot's right
-                //moveHelper.runMotorsToPosition(400, -400, -400, 400);
+                moveHelper.runMotorsToPosition(400,-400,-400,400);
                 advanceToStateAfterTime(190, .75);
                 break;
 
@@ -117,9 +107,9 @@ public class Minnow extends OpMode {
                 advanceToStateAfterTime(200, 0.1);
                 break;
 
-            case 200://first move out towards depot
-                moveHelper.runMotorsToPosition(1300,1300,1300,1300);
-                advanceToStateAfterTime(210, 1.8);
+            case 200://first move out towards crater
+                moveHelper.runMotorsToPosition(1200,1200,1200,1200);
+                advanceToStateAfterTime(210, 2.0);
                 break;
 
             case 210: //stop
@@ -128,8 +118,8 @@ public class Minnow extends OpMode {
                 break;
 
             case 220://turn left
-                moveHelper.runMotorsToPosition(-FIRST_LEFT_TURN,FIRST_LEFT_TURN,-FIRST_LEFT_TURN,FIRST_LEFT_TURN);
-                advanceToStateAfterTime(230, 1.8);
+                moveHelper.runMotorsToPosition(-1700,1700,-1700,1700);
+                advanceToStateAfterTime(230, 2.0);
                 break;
 
             case 230: //stop
@@ -150,7 +140,7 @@ public class Minnow extends OpMode {
 
             case 260:
                 moveHelper.encoderPowerLevel = 0; // because this is zero, we are just setting the position into the encoders
-                moveHelper.runMotorsToPosition(DETECTION_MOVE,DETECTION_MOVE,DETECTION_MOVE,DETECTION_MOVE); //this is the set position
+                moveHelper.runMotorsToPosition(5400,5400,5400,5400); //this is the set position
                 state=270;
                 break;
 
@@ -194,79 +184,72 @@ public class Minnow extends OpMode {
             case 400: //Continue to fixed location before turning to depot
                 moveHelper.encoderPowerLevel = 1;
                 moveHelper.continueToPosition();// Now finish running to the position that was set in step 254
-                advanceToStateAfterTime(405, 3);
+                advanceToStateAfterTime(410, 3);
                 telemetry.addData("Arm Status: ", "continuing");
                 break;
 
-            case 405: //stop
+            case 410: //stop/reset encoders
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(410, 0.1);
+                moveHelper.driveForward(0);  // force a stop
+                advanceToStateAfterTime(420, 0.1);
                 break;
 
-            case 410://turn right towards depot
-                moveHelper.runMotorsToPosition(DEPOT_TURN,-DEPOT_TURN,DEPOT_TURN,-DEPOT_TURN);
-                advanceToStateAfterTime(420, 1.8);
+            case 420: //turn towards depot
+                moveHelper.runMotorsToPosition(-1100,1100,-1100,1100);
+                advanceToStateAfterTime(430, 1.75);
                 break;
 
-            case 420: //stop
+            case 430: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(430, 0.1);
+                advanceToStateAfterTime(440, 0.1);
                 break;
 
-            case 430:// move towards the depot
-                moveHelper.runMotorsToPosition(DEPOT_MOVE,DEPOT_MOVE,DEPOT_MOVE,DEPOT_MOVE);
-                advanceToStateAfterTime(440, 2.0);
+            case 440://move forward into depot
+                moveHelper.runMotorsToPosition(5000,5000,5000,5000);
+                advanceToStateAfterTime(450, 3.0);
                 break;
 
-            case 440: //stop
+            case 450: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(450, 0.1);
+                advanceToStateAfterTime(460, 0.1);
                 break;
 
-            case 450://turn left away from the crater
-                moveHelper.runMotorsToPosition(-2000,2000,-2000,2000);
-                advanceToStateAfterTime(460, 1.8);
-                break;
-
-            case 460: //stop
-                moveHelper.resetEncoders();
-                advanceToStateAfterTime(470, 0.1);
-                break;
-
-            case 470: // shove marker off
+            case 460: // shove marker off
                 markHelper.open();
-                advanceToStateAfterTime(480, 1);
+                advanceToStateAfterTime(470, 1);
                 break;
 
-            case 480: // shove marker off
+            case 470: // close servo arm
                 markHelper.close();
-                advanceToStateAfterTime(999, 1);
-                break;
-/*
-            case 410: // close servo arm
-                markHelper.close();
-                if(doCrater) {
-
-                    advanceToStateAfterTime(500, .1);
-                }
+                advanceToStateAfterTime(480, .1);
                 break;
 
-            case 500: // back up into crater
-                moveHelper.runMotorsToPosition(-8000,-8000,-8000,-8000);
-                advanceToStateAfterTime(510, 5.5);
+            case 480: // back up into crater
+                moveHelper.runMotorsToPosition(-3000,-3000,-3000,-3000);
+                advanceToStateAfterTime(999, 5.5);
                 break;
 
-            case 510: //stop
-                moveHelper.resetEncoders();
-                advanceToStateAfterTime(999, 0.1);
-                break;
-*/
 
+                // Next you need to copy all steps from 260 and on from WHALES.
+            // Obviously renumber them starting with 420 here.  KEEP COMMENTING!
+            // 260 needs to be adjusted, you probably won't turn quite as far.
+            // Just add one step at a time until you're in the depot
 
-
-
+            // ALSO, please re-test normal whales and normal nhawrwahwl to make sure we didn't kill those programs accidentally.
+            // to make sure the robot doesn't explode or something
         }
-        telemetry.addData("State:",state);
-    }
-}
 
+
+        telemetry.addData("State", state);
+        moveHelper.showEncoderValues();
+        telemetry.addData("IsAligned" , detector.getAligned()); // Is the bot aligned with the gold mineral?
+        telemetry.addData("IsFound" , detector.isFound()); // Is the mineral in the screen freame?
+        telemetry.addData("X Pos" , detector.getXPosition()); // Gold X position.
+        telemetry.update();
+
+
+
+
+    }
+
+}

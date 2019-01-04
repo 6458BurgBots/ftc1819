@@ -6,37 +6,56 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@Autonomous(name="Minnow(mineral detect depo)", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
+@Autonomous(name="OnTheSpot (depot new robot)", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
 // name = "Minnow" shows up in the driver's station list
 // group = "Autonomous" refers to which list in the driver's station
-public class Minnow extends OpMode {
+public class OnTheSpot extends OpMode {
     private static final int UPPER_LIMIT = 11584;
+    private static final int LOWER_LIMIT = 0;
+    private static final double SLOW_POWER = 0.5;
+    private static final int DETECTION_MOVE = 1494;
+    private static final int DEPOT_MOVE = 1032;
+    private static final int DEPOT_TURN = 700;
+    private static final int FIRST_LEFT_TURN = 475;
+    private static final int SHIFT_RIGHT = 100;
+    private static final int MOVE_TO_DEPOT = 325;
+    private static final int MOVE_BACKWARDS = 600;
+   private static final int TURN_LEFT_FROM_CRATER = 500;
+ /*   private static final int UPPER_LIMIT = 11584;
     private static final int LOWER_LIMIT = 0;
     private static final double SLOW_POWER = 0.5;
     private static final int DETECTION_MOVE = 5978;
     private static final int DEPOT_MOVE = 4130;
     private static final int DEPOT_TURN = 2800;
     private static final int FIRST_LEFT_TURN = 1900;
+    private static final int SHIFT_RIGHT = 400;
+    private static final int MOVE_TO_DEPOT = 1300;
+    private static final int MOVE_BACKWARDS = 1400;
+    private static final int TURN_LEFT_FROM_CRATER = 2000;
+*/
+
     ;
 
     MoveHelper moveHelper;
-    LanderHelper landerHelper;
-    Mark markHelper;
+   // LanderHelper landerHelper;
+    //Mark markHelper;
     protected int state;
     protected double lastTime;// double is a data type like float, but allows for more precision (more decimal places)
     // protected so that we can only use it in other classes that have derived from whales
     private boolean doCrater=true;
     private GoldAlignDetector detector;
-    SampleHelper sampleHelper;
+//    SampleHelper sampleHelper;
 
     public void init() { // when creating a class derived from OpMode, you must define what happens when init is pressed
         // you must also define "loop" as part of your framework
         moveHelper = new MoveHelper(telemetry, hardwareMap); // when parameters are purple, that means they are class variables
         moveHelper.init();
-        landerHelper = new LanderHelper(telemetry, hardwareMap);
+        /*landerHelper = new LanderHelper(telemetry, hardwareMap);
         landerHelper.init();
         markHelper = new Mark(telemetry, hardwareMap);
         markHelper.init();
+        sampleHelper = new SampleHelper(telemetry,hardwareMap);
+        sampleHelper.init(); */
         state = 0;
         lastTime = 0;
         // Set up detector
@@ -57,8 +76,7 @@ public class Minnow extends OpMode {
         detector.ratioScorer.perfectRatio = 1.0; // Ratio adjustment
 
         detector.enable(); // Start the detector!
-        sampleHelper = new SampleHelper(telemetry,hardwareMap);
-        sampleHelper.init();
+
     }
 
 
@@ -88,10 +106,10 @@ public class Minnow extends OpMode {
         switch (state) {
             case 0:
                 lastTime = getRuntime();
-                state = 40;
+                state = 70;
                 break;
 
-            case 40:
+  /*         case 40:
                 landerHelper.resetEncoders();
                 advanceToStateAfterTime(50, 0.1);
                 break;
@@ -102,13 +120,13 @@ public class Minnow extends OpMode {
                 break;
 
             case 60: //reset encoders/stop
-                //landerHelper.resetEncoders();
-                //moveHelper.resetEncoders();
+                landerHelper.resetEncoders();
+                moveHelper.resetEncoders();
                 advanceToStateAfterTime(70, 0.1);
-                break;
+                break; */
 
             case 70: //shifts to the robot's right
-                //moveHelper.runMotorsToPosition(400, -400, -400, 400);
+                moveHelper.runMotorsToPosition(SHIFT_RIGHT, -SHIFT_RIGHT, -SHIFT_RIGHT, SHIFT_RIGHT);
                 advanceToStateAfterTime(190, .75);
                 break;
 
@@ -118,7 +136,7 @@ public class Minnow extends OpMode {
                 break;
 
             case 200://first move out towards depot
-                moveHelper.runMotorsToPosition(1300,1300,1300,1300);
+                moveHelper.runMotorsToPosition(MOVE_TO_DEPOT,MOVE_TO_DEPOT,MOVE_TO_DEPOT,MOVE_TO_DEPOT);
                 advanceToStateAfterTime(210, 1.8);
                 break;
 
@@ -138,7 +156,7 @@ public class Minnow extends OpMode {
                 break;
 
             case 240: //move back
-                moveHelper.runMotorsToPosition(-1900,-1900,-1900,-1900);
+                moveHelper.runMotorsToPosition(-MOVE_BACKWARDS,-MOVE_BACKWARDS,-MOVE_BACKWARDS,-MOVE_BACKWARDS);
                 advanceToStateAfterTime(250, 2.0);
                 break;
 
@@ -168,7 +186,7 @@ public class Minnow extends OpMode {
                 break;
 
             case 280: //lower arm
-                sampleHelper.open();
+    //            sampleHelper.open();
                 advanceToStateAfterTime(290, 1);
                 telemetry.addData("Arm Status: ", "lowering");
                 break;
@@ -186,7 +204,7 @@ public class Minnow extends OpMode {
                 break;
 
             case 310: //raise arm
-                sampleHelper.close();
+      //          sampleHelper.close();
                 advanceToStateAfterTime(400, 1);
                 telemetry.addData("Arm Status: ", "raising");
                 break;
@@ -224,7 +242,7 @@ public class Minnow extends OpMode {
                 break;
 
             case 450://turn left away from the crater
-                moveHelper.runMotorsToPosition(-2000,2000,-2000,2000);
+                moveHelper.runMotorsToPosition(-TURN_LEFT_FROM_CRATER,TURN_LEFT_FROM_CRATER,-TURN_LEFT_FROM_CRATER,TURN_LEFT_FROM_CRATER);
                 advanceToStateAfterTime(460, 1.8);
                 break;
 
@@ -233,7 +251,7 @@ public class Minnow extends OpMode {
                 advanceToStateAfterTime(470, 0.1);
                 break;
 
-            case 470: // shove marker off
+  /*          case 470: // shove marker off
                 markHelper.open();
                 advanceToStateAfterTime(480, 1);
                 break;
@@ -241,7 +259,7 @@ public class Minnow extends OpMode {
             case 480: // shove marker off
                 markHelper.close();
                 advanceToStateAfterTime(999, 1);
-                break;
+                break; */
 /*
             case 410: // close servo arm
                 markHelper.close();

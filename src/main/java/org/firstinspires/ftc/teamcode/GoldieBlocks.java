@@ -109,6 +109,7 @@ public class GoldieBlocks extends OpMode{
 
             case 200://first move out towards crater
                 moveHelper.runMotorsToPosition(1200,1200,1200,1200);
+//                moveHelper.runMotorsToPosition(1300,1300,1300,1300);  // Safe mineral behavior
                 advanceToStateAfterTime(210, 2.0);
                 break;
 
@@ -141,6 +142,7 @@ public class GoldieBlocks extends OpMode{
             case 260:
                 moveHelper.encoderPowerLevel = 0; // because this is zero, we are just setting the position into the encoders
                 moveHelper.runMotorsToPosition(5400,5400,5400,5400); //this is the set position
+//                moveHelper.runMotorsToPosition(5600,5600,5600,5600); // safe mineral behavior
                 state=270;
                 break;
 

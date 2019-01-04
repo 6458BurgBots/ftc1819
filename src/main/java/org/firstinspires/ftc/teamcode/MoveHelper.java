@@ -29,7 +29,7 @@ public class MoveHelper extends NoOperationHelper {
         super(t, h);
     }
 
-    public void init() {
+    public void init( ) {
         // links motor names here to the names given in the config on the phones
         FLMotor = hardwareMap.dcMotor.get("LF"); // TODO: Fix the config names to match the variables
         FRMotor = hardwareMap.dcMotor.get("RF");
@@ -37,16 +37,20 @@ public class MoveHelper extends NoOperationHelper {
         BRMotor = hardwareMap.dcMotor.get("RB");
 
 
-
         // setting directions/telling them we are using encoders
-        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        //if (isOldRobot) {
+            FLMotor.setDirection(DcMotor.Direction.REVERSE);
+            BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        /*} else {
+            BRMotor.setDirection(DcMotor.Direction.REVERSE);
+            FLMotor.setDirection(DcMotor.Direction.REVERSE);
+        }*/
         FLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
+
     public void omniDrive(double lx,double ly, double rx){
         telemetry.addData("Drive input (lx,ly): ", lx + "," + ly);
         // omni-drive math, sets it up to run properly
