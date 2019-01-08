@@ -6,7 +6,7 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@Autonomous(name="TacoCat", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
+@Autonomous(name="CraterNew", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
                                             // name = "Whales" shows up in the driver's station list
                                             // group = "Autonomous" refers to which list in the driver's station
 public class TacoCat extends OpMode{

@@ -6,7 +6,7 @@ import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@Autonomous(name="Minnow(mineral detect depo)", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
+@Autonomous(name="OldSampleDepot", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
 // name = "Minnow" shows up in the driver's station list
 // group = "Autonomous" refers to which list in the driver's station
 public class Minnow extends OpMode {
@@ -102,13 +102,13 @@ public class Minnow extends OpMode {
                 break;
 
             case 60: //reset encoders/stop
-                //landerHelper.resetEncoders();
-                //moveHelper.resetEncoders();
+                landerHelper.resetEncoders();
+                moveHelper.resetEncoders();
                 advanceToStateAfterTime(70, 0.1);
                 break;
 
             case 70: //shifts to the robot's right
-                //moveHelper.runMotorsToPosition(400, -400, -400, 400);
+                moveHelper.runMotorsToPosition(400, -400, -400, 400);
                 advanceToStateAfterTime(190, .75);
                 break;
 

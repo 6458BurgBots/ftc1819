@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-@TeleOp(name="Muffin", group="TeleOp")
+@TeleOp(name="TeleOp", group="TeleOp")
 public class Muffin extends OpMode{
 
     MoveHelper moveHelper;
