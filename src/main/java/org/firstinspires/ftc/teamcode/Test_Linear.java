@@ -72,7 +72,7 @@ public class Test_Linear extends LinearOpMode {
 
         robot.init(hardwareMap);
 
-        colourSensor = hardwareMap.colorSensor.get("colour");
+        //colourSensor = hardwareMap.colorSensor.get("colour");
 
 
         // Send telemetry message to signify robot waiting;

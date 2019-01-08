@@ -23,12 +23,13 @@ public class MoveHelper extends NoOperationHelper {
     protected DcMotor BLMotor;
     protected DcMotor BRMotor;
     private boolean isPositionValid;
+    public double encoderPowerLevel = 1;
     MoveHelper(Telemetry t, HardwareMap h)
     {
         super(t, h);
     }
 
-    public void init() {
+    public void init( ) {
         // links motor names here to the names given in the config on the phones
         FLMotor = hardwareMap.dcMotor.get("LF"); // TODO: Fix the config names to match the variables
         FRMotor = hardwareMap.dcMotor.get("RF");
@@ -36,16 +37,20 @@ public class MoveHelper extends NoOperationHelper {
         BRMotor = hardwareMap.dcMotor.get("RB");
 
 
-
         // setting directions/telling them we are using encoders
-        FLMotor.setDirection(DcMotor.Direction.REVERSE);
-        BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        //if (isOldRobot) {
+            FLMotor.setDirection(DcMotor.Direction.REVERSE);
+            BLMotor.setDirection(DcMotor.Direction.REVERSE);
+        /*} else {
+            BRMotor.setDirection(DcMotor.Direction.REVERSE);
+            FLMotor.setDirection(DcMotor.Direction.REVERSE);
+        }*/
         FLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         FRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BLMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         BRMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-
     }
+
     public void omniDrive(double lx,double ly, double rx){
         telemetry.addData("Drive input (lx,ly): ", lx + "," + ly);
         // omni-drive math, sets it up to run properly
@@ -87,6 +92,7 @@ public class MoveHelper extends NoOperationHelper {
     public void runBRMotor (double power){
         BRMotor.setPower(power);
     }
+
     public void driveForward (double power){
         FLMotor.setPower(power);
         FRMotor.setPower(power);
@@ -128,7 +134,7 @@ public class MoveHelper extends NoOperationHelper {
     public void moveToPosition (int position){
         FLMotor.setTargetPosition(position);
         FLMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-}
+    }
 
     public int getEncoderValue(){
         return FLMotor.getCurrentPosition();
@@ -139,20 +145,33 @@ public class MoveHelper extends NoOperationHelper {
         motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         motor.setTargetPosition(position);
         motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        motor.setPower(ENCODER_POWER_LEVEL);
+        motor.setPower(encoderPowerLevel);
+    }
+
+    public void continueOneMotor(DcMotor motor){
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(encoderPowerLevel);
+        telemetry.addData("Continue target: " + motor.getDeviceName(),motor.getTargetPosition());
     }
 
     public void runMotorsToPosition(int flPos, int frPos, int blPos, int brPos){
         if (!isPositionValid) {
-             runOneMotor(FLMotor, flPos);
-             runOneMotor(FRMotor, frPos);
-             runOneMotor(BRMotor, brPos);
-             runOneMotor(BLMotor, blPos);
-             isPositionValid = true;
+            runOneMotor(FLMotor, flPos);
+            runOneMotor(FRMotor, frPos);
+            runOneMotor(BRMotor, brPos);
+            runOneMotor(BLMotor, blPos);
+            isPositionValid = true;
         }
     }
 
-
+    public void continueToPosition(){
+        if (isPositionValid) {
+            continueOneMotor(FLMotor);
+            continueOneMotor(FRMotor);
+            continueOneMotor(BRMotor);
+            continueOneMotor(BLMotor);
+        }
+    }
 
     public void checkTeleOp(Gamepad gamepad1,Gamepad gamepad2){
         // alaina is struggling to find a way to describe this
