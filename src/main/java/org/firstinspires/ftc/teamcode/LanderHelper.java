@@ -30,8 +30,7 @@ public class LanderHelper extends NoOperationHelper {
         return armMotor.getCurrentPosition();
     }
 
-    public void resetEncoders() {
-        armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    public void resetEncoders() {armMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     }
     public void runWithoutEncoders() {
         armMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

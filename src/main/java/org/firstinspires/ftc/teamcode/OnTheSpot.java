@@ -12,15 +12,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 public class OnTheSpot extends OpMode {
     private static final int UPPER_LIMIT = 11584;
     private static final int LOWER_LIMIT = 0;
-    private static final double SLOW_POWER = 0.5;
-    private static final int DETECTION_MOVE = 1494;
-    private static final int DEPOT_MOVE = 1032;
-    private static final int DEPOT_TURN = 700;
-    private static final int FIRST_LEFT_TURN = 475;
-    private static final int SHIFT_RIGHT = 100;
-    private static final int MOVE_TO_DEPOT = 325;
-    private static final int MOVE_BACKWARDS = 600;
-   private static final int TURN_LEFT_FROM_CRATER = 500;
+    public static final double FAST_POWER = 1;
+    private static final double SLOW_POWER = 0.3;
+    private static final int DETECTION_MOVE = 3000;
+    private static final int DEPOT_MOVE = 2215;
+    private static final int DEPOT_TURN = 1350;
+    private static final int FIRST_LEFT_TURN = 850;
+    private static final int SHIFT_RIGHT = 200;
+    private static final int FIRST_MOVE_OUT = 650;
+    private static final int MOVE_BACKWARDS = 700;
+   private static final int TURN_LEFT_FROM_CRATER = 1000;
  /*   private static final int UPPER_LIMIT = 11584;
     private static final int LOWER_LIMIT = 0;
     private static final double SLOW_POWER = 0.5;
@@ -29,7 +30,7 @@ public class OnTheSpot extends OpMode {
     private static final int DEPOT_TURN = 2800;
     private static final int FIRST_LEFT_TURN = 1900;
     private static final int SHIFT_RIGHT = 400;
-    private static final int MOVE_TO_DEPOT = 1300;
+    private static final int FIRST_MOVE_OUT = 1300;
     private static final int MOVE_BACKWARDS = 1400;
     private static final int TURN_LEFT_FROM_CRATER = 2000;
 */
@@ -37,25 +38,26 @@ public class OnTheSpot extends OpMode {
     ;
 
     MoveHelper moveHelper;
-   // LanderHelper landerHelper;
-    //Mark markHelper;
+    LanderHelper landerHelper;
+    Mark markHelper;
     protected int state;
     protected double lastTime;// double is a data type like float, but allows for more precision (more decimal places)
     // protected so that we can only use it in other classes that have derived from whales
     private boolean doCrater=true;
     private GoldAlignDetector detector;
-//    SampleHelper sampleHelper;
+    SampleHelper sampleHelper;
 
     public void init() { // when creating a class derived from OpMode, you must define what happens when init is pressed
         // you must also define "loop" as part of your framework
         moveHelper = new MoveHelper(telemetry, hardwareMap); // when parameters are purple, that means they are class variables
         moveHelper.init();
-        /*landerHelper = new LanderHelper(telemetry, hardwareMap);
+        moveHelper.encoderPowerLevel = FAST_POWER;
+        landerHelper = new LanderHelper(telemetry, hardwareMap);
         landerHelper.init();
         markHelper = new Mark(telemetry, hardwareMap);
         markHelper.init();
         sampleHelper = new SampleHelper(telemetry,hardwareMap);
-        sampleHelper.init(); */
+        sampleHelper.init();
         state = 0;
         lastTime = 0;
         // Set up detector
@@ -106,24 +108,24 @@ public class OnTheSpot extends OpMode {
         switch (state) {
             case 0:
                 lastTime = getRuntime();
-                state = 70;
+                state = 40;
                 break;
 
-  /*         case 40:
+           case 40:
                 landerHelper.resetEncoders();
                 advanceToStateAfterTime(50, 0.1);
                 break;
 
             case 50: //lowers arm/robot
-                landerHelper.runMotorsToPosition(9950);
-                advanceToStateAfterTime(60, 6);
+                landerHelper.runMotorsToPosition(550);
+                advanceToStateAfterTime(60, 5);
                 break;
 
             case 60: //reset encoders/stop
                 landerHelper.resetEncoders();
                 moveHelper.resetEncoders();
                 advanceToStateAfterTime(70, 0.1);
-                break; */
+                break;
 
             case 70: //shifts to the robot's right
                 moveHelper.runMotorsToPosition(SHIFT_RIGHT, -SHIFT_RIGHT, -SHIFT_RIGHT, SHIFT_RIGHT);
@@ -136,7 +138,7 @@ public class OnTheSpot extends OpMode {
                 break;
 
             case 200://first move out towards depot
-                moveHelper.runMotorsToPosition(MOVE_TO_DEPOT,MOVE_TO_DEPOT,MOVE_TO_DEPOT,MOVE_TO_DEPOT);
+                moveHelper.runMotorsToPosition(FIRST_MOVE_OUT, FIRST_MOVE_OUT, FIRST_MOVE_OUT, FIRST_MOVE_OUT);
                 advanceToStateAfterTime(210, 1.8);
                 break;
 
@@ -176,7 +178,7 @@ public class OnTheSpot extends OpMode {
                 if(detector.isFound()){
                     state = 280;
                 } else {
-                    moveHelper.encoderPowerLevel = .3;
+                    moveHelper.encoderPowerLevel = SLOW_POWER;
                     moveHelper.continueToPosition();  // Now run to the position that was set in step 254
                     advanceToStateAfterTime(400, 5); // time out in case we don't see anything, ever
                 }
@@ -186,13 +188,13 @@ public class OnTheSpot extends OpMode {
                 break;
 
             case 280: //lower arm
-    //            sampleHelper.open();
+                sampleHelper.open();
                 advanceToStateAfterTime(290, 1);
                 telemetry.addData("Arm Status: ", "lowering");
                 break;
 
             case 290: //drive forward
-                moveHelper.encoderPowerLevel = .5;
+                moveHelper.encoderPowerLevel = SLOW_POWER;
                 moveHelper.continueToPosition();   // Now run to the position that was set in step 254
                 advanceToStateAfterTime(300, 1);  // for only one second
                 telemetry.addData("Arm Status: ", "forward");
@@ -204,13 +206,13 @@ public class OnTheSpot extends OpMode {
                 break;
 
             case 310: //raise arm
-      //          sampleHelper.close();
+                sampleHelper.close();
                 advanceToStateAfterTime(400, 1);
                 telemetry.addData("Arm Status: ", "raising");
                 break;
 
             case 400: //Continue to fixed location before turning to depot
-                moveHelper.encoderPowerLevel = 1;
+                moveHelper.encoderPowerLevel = FAST_POWER;
                 moveHelper.continueToPosition();// Now finish running to the position that was set in step 254
                 advanceToStateAfterTime(405, 3);
                 telemetry.addData("Arm Status: ", "continuing");
@@ -251,7 +253,7 @@ public class OnTheSpot extends OpMode {
                 advanceToStateAfterTime(470, 0.1);
                 break;
 
-  /*          case 470: // shove marker off
+            case 470: // shove marker off
                 markHelper.open();
                 advanceToStateAfterTime(480, 1);
                 break;
@@ -259,7 +261,7 @@ public class OnTheSpot extends OpMode {
             case 480: // shove marker off
                 markHelper.close();
                 advanceToStateAfterTime(999, 1);
-                break; */
+                break;
 /*
             case 410: // close servo arm
                 markHelper.close();

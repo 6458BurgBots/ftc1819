@@ -57,28 +57,23 @@ import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
 @TeleOp(name="Test", group="Test")
 public class Test_Linear extends LinearOpMode {
 
-    /* Declare OpMode members. */
-    TestBot robot = new TestBot();              // Use a K9'shardware
-    ColorSensor colourSensor;
+    MoveHelper moveHelper;
+    SampleHelper sampleHelper;
+    Mark markHelper;
+    LanderHelper landerHelper;
+
+
 
     @Override
     public void runOpMode() {
-        double left;
-        //double right;
-
-        /* Initialize the hardware variables.
-         * The init() method of the hardware class does all the work here
-         */
-
-        robot.init(hardwareMap);
-
-        //colourSensor = hardwareMap.colorSensor.get("colour");
-
-
-        // Send telemetry message to signify robot waiting;
-        telemetry.addData("Say", "Hello Driver");    //
-        telemetry.update();
-
+        moveHelper = new MoveHelper(telemetry, hardwareMap);
+        moveHelper.init();
+        sampleHelper = new SampleHelper(telemetry,hardwareMap);
+        sampleHelper.init();
+        markHelper = new Mark(telemetry, hardwareMap);
+        markHelper.init();
+        landerHelper = new LanderHelper (telemetry,hardwareMap);
+        landerHelper.init();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -87,37 +82,69 @@ public class Test_Linear extends LinearOpMode {
         while (opModeIsActive()) {
 
             if(gamepad1.x){
-                robot.frontLeft.setPower(.3);
+                moveHelper.runFLMotor(.3);
 
             }else {
-                robot.frontLeft.setPower(0);
+                moveHelper.runFLMotor(0);
             }
 
             if(gamepad1.a){
-                robot.backLeft.setPower(.3);
+                moveHelper.runBLMotor(.3);
 
             }else {
-                robot.backLeft.setPower(0);
+                moveHelper.runBLMotor(0);
             }
 
             if(gamepad1.y){
-                robot.frontRight.setPower(.3);
+                moveHelper.runFRMotor(.3);
 
             }else {
-                robot.frontRight.setPower(0);
+                moveHelper.runFRMotor(0);
             }
 
             if(gamepad1.b){
-                robot.backRight.setPower(.3);
+                moveHelper.runBRMotor(.3);
 
             }else {
-                robot.backRight.setPower(0);
+                moveHelper.runBRMotor(0);
+            }
+            if (gamepad1.right_trigger > 0) {           //Sample Arm
+                sampleHelper.open();
+            }
+            if (gamepad1.left_trigger > 0) {
+                sampleHelper.close();
             }
 
-            telemetry.addData("backLeft", robot.backLeft.getCurrentPosition());
-            telemetry.addData("backRight", robot.backRight.getCurrentPosition());
-            telemetry.addData("frontLeft", robot.frontLeft.getCurrentPosition());
-            telemetry.addData("frontRight", robot.frontRight.getCurrentPosition());
+            if (gamepad1.right_bumper) {           //Mark Arm
+                markHelper.open();
+            }
+            if (gamepad1.left_bumper) {
+                markHelper.close();
+            }
+            if (gamepad1.left_stick_button){
+
+                        moveHelper.resetEncoders();
+            }
+            if (gamepad1.right_stick_button){
+
+                landerHelper.resetEncoders();
+            }
+
+            if (gamepad2.a) {
+                landerHelper.raiseArm(.3);
+            } else if (gamepad2.b) {
+                landerHelper.raiseArm(-.3);
+            } else {
+                landerHelper.raiseArm(0);
+            }
+
+
+
+            telemetry.addData("backLeft", moveHelper.GetBLMotorPosition());
+            telemetry.addData("backRight", moveHelper.GetBRMotorPosition());
+            telemetry.addData("frontLeft", moveHelper.GetFLMotorPosition());
+            telemetry.addData("frontRight", moveHelper.GetFRMotorPosition());
+            telemetry.addData( "arm",landerHelper.getPosition()); //Need to fix
 
             telemetry.update();
 
