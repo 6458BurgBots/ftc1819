@@ -117,7 +117,7 @@ public class OnTheSpot extends OpMode {
                 break;
 
             case 50: //lowers arm/robot
-                landerHelper.runMotorsToPosition(550);
+                landerHelper.runMotorsToPosition(19);
                 advanceToStateAfterTime(60, 5);
                 break;
 

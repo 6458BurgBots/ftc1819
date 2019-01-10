@@ -144,7 +144,7 @@ public class Test_Linear extends LinearOpMode {
             telemetry.addData("backRight", moveHelper.GetBRMotorPosition());
             telemetry.addData("frontLeft", moveHelper.GetFLMotorPosition());
             telemetry.addData("frontRight", moveHelper.GetFRMotorPosition());
-            telemetry.addData( "arm",landerHelper.getPosition()); //Need to fix
+            telemetry.addData( "arm",landerHelper.getPosition()); //Fix Fix Fix
 
             telemetry.update();
 

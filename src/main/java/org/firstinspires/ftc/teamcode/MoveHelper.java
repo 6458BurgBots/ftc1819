@@ -31,22 +31,22 @@ public class MoveHelper extends NoOperationHelper {
 
     public void init( ) {
         // links motor names here to the names given in the config on the phones
-        FLMotor = hardwareMap.dcMotor.get("LB"); // TODO: Fix the config names to match the variable
-        FRMotor = hardwareMap.dcMotor.get("LF");
-        BLMotor = hardwareMap.dcMotor.get("RB");
-        BRMotor = hardwareMap.dcMotor.get("RF");
-//        FLMotor = hardwareMap.dcMotor.get("LF"); //
-//        FRMotor = hardwareMap.dcMotor.get("RF");
-//        BLMotor = hardwareMap.dcMotor.get("LB");
-//        BRMotor = hardwareMap.dcMotor.get("RB");
+//        FLMotor = hardwareMap.dcMotor.get("LB"); // TODO: Fix the config names to match the variable
+//        FRMotor = hardwareMap.dcMotor.get("LF");
+//        BLMotor = hardwareMap.dcMotor.get("RB");
+//        BRMotor = hardwareMap.dcMotor.get("RF");
+        FLMotor = hardwareMap.dcMotor.get("LF");
+        FRMotor = hardwareMap.dcMotor.get("RF");
+        BLMotor = hardwareMap.dcMotor.get("LB");
+        BRMotor = hardwareMap.dcMotor.get("RB");
 
 
         // setting directions/telling them we are using encoders
         //if (isOldRobot) {
-        //    BLMotor.setDirection(DcMotor.Direction.REVERSE);
-        //    BRMotor.setDirection(DcMotor.Direction.REVERSE);
+            BLMotor.setDirection(DcMotor.Direction.REVERSE);
+//            BRMotor.setDirection(DcMotor.Direction.REVERSE);
             FLMotor.setDirection(DcMotor.Direction.REVERSE);
-            FRMotor.setDirection(DcMotor.Direction.REVERSE);
+//            FRMotor.setDirection(DcMotor.Direction.REVERSE);
 
         /*} else {
             BRMotor.setDirection(DcMotor.Direction.REVERSE);
