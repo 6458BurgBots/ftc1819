@@ -16,9 +16,9 @@ public class MineralArmHelper extends NoOperationHelper {
     double shoulderPosition;
     double elbowPosition;
     double servoPosition;
-    public static double MINERAL_SERVO_CLOSED = 0;
-    public static double MINERAL_SERVO_OPEN = .5;
-    public static double MINERAL_SERVO_HOME = .5;
+    public static double MINERAL_SERVO_CLOSED = .3;
+    public static double MINERAL_SERVO_OPEN = 1;
+    public static double MINERAL_SERVO_HOME = 1;
     public static double ELBOW_SERVO_HOME = .07;
     protected Servo mineralServo;
     protected Servo elbowServo;

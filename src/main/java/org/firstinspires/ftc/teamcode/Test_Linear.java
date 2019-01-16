@@ -61,6 +61,8 @@ public class Test_Linear extends LinearOpMode {
     SampleHelper sampleHelper;
     Mark markHelper;
     LanderHelper landerHelper;
+    double sampleArmPosition = SampleHelper.SAMPLE_SERVO_CLOSED;
+    public final static double SAMPLE_ARM_SCALE = .1;
 
 
 
@@ -131,12 +133,17 @@ public class Test_Linear extends LinearOpMode {
             }
 
             if (gamepad2.a) {
-                landerHelper.raiseArm(.3);
+                landerHelper.raiseArm(.5);
             } else if (gamepad2.b) {
-                landerHelper.raiseArm(-.3);
+                landerHelper.raiseArm(-.5);
             } else {
                 landerHelper.raiseArm(0);
             }
+
+            sampleArmPosition += gamepad2.left_stick_y*SAMPLE_ARM_SCALE;
+            sampleHelper.moveSampleServo(sampleArmPosition);
+
+
 
 
 
@@ -145,6 +152,7 @@ public class Test_Linear extends LinearOpMode {
             telemetry.addData("frontLeft", moveHelper.GetFLMotorPosition());
             telemetry.addData("frontRight", moveHelper.GetFRMotorPosition());
             telemetry.addData( "arm",landerHelper.getPosition()); //Fix Fix Fix
+            telemetry.addData("sample arm", sampleArmPosition);
 
             telemetry.update();
 

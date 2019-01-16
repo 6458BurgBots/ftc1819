@@ -9,33 +9,19 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 @Autonomous(name="DepotNew", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
 // name = "Minnow" shows up in the driver's station list
 // group = "Autonomous" refers to which list in the driver's station
-public class OnTheSpot extends OpMode {
-    private static final int UPPER_LIMIT = 11584;
+public class DepotNew extends OpMode {
+    private static final int UPPER_LIMIT = 10480;
     private static final int LOWER_LIMIT = 0;
-    public static final double FAST_POWER = 1;
+    public static final double FAST_POWER =.7;
     private static final double SLOW_POWER = 0.3;
-    private static final int DETECTION_MOVE = 3000;
+    private static final int DETECTION_MOVE = 3025;
     private static final int DEPOT_MOVE = 2215;
-    private static final int DEPOT_TURN = 1350;
-    private static final int FIRST_LEFT_TURN = 850;
+    private static final int DEPOT_TURN = 1150;
+    private static final int FIRST_LEFT_TURN = 715;
     private static final int SHIFT_RIGHT = 200;
-    private static final int FIRST_MOVE_OUT = 650;
-    private static final int MOVE_BACKWARDS = 700;
-   private static final int TURN_LEFT_FROM_CRATER = 1000;
- /*   private static final int UPPER_LIMIT = 11584;
-    private static final int LOWER_LIMIT = 0;
-    private static final double SLOW_POWER = 0.5;
-    private static final int DETECTION_MOVE = 5978;
-    private static final int DEPOT_MOVE = 4130;
-    private static final int DEPOT_TURN = 2800;
-    private static final int FIRST_LEFT_TURN = 1900;
-    private static final int SHIFT_RIGHT = 400;
-    private static final int FIRST_MOVE_OUT = 1300;
-    private static final int MOVE_BACKWARDS = 1400;
-    private static final int TURN_LEFT_FROM_CRATER = 2000;
-*/
-
-    ;
+    private static final int FIRST_MOVE_OUT = 755;
+    private static final int MOVE_BACKWARDS = 900;
+    private static final int TURN_LEFT_FROM_CRATER = 1600;
 
     MoveHelper moveHelper;
     LanderHelper landerHelper;
@@ -117,7 +103,7 @@ public class OnTheSpot extends OpMode {
                 break;
 
             case 50: //lowers arm/robot
-                landerHelper.runMotorsToPosition(19);
+                landerHelper.runMotorsToPosition(UPPER_LIMIT);
                 advanceToStateAfterTime(60, 5);
                 break;
 
@@ -139,7 +125,7 @@ public class OnTheSpot extends OpMode {
 
             case 200://first move out towards depot
                 moveHelper.runMotorsToPosition(FIRST_MOVE_OUT, FIRST_MOVE_OUT, FIRST_MOVE_OUT, FIRST_MOVE_OUT);
-                advanceToStateAfterTime(210, 1.8);
+                advanceToStateAfterTime(210, 1.9);
                 break;
 
             case 210: //stop
@@ -154,11 +140,13 @@ public class OnTheSpot extends OpMode {
 
             case 230: //stop
                 moveHelper.resetEncoders();
+                moveHelper.encoderPowerLevel = SLOW_POWER;
                 advanceToStateAfterTime(240, 0.1);
                 break;
 
             case 240: //move back
                 moveHelper.runMotorsToPosition(-MOVE_BACKWARDS,-MOVE_BACKWARDS,-MOVE_BACKWARDS,-MOVE_BACKWARDS);
+
                 advanceToStateAfterTime(250, 2.0);
                 break;
 
@@ -253,17 +241,16 @@ public class OnTheSpot extends OpMode {
                 advanceToStateAfterTime(470, 0.1);
                 break;
 
-            case 470: // shove marker off
-                markHelper.open();
-                advanceToStateAfterTime(480, 1);
+          case 470: // shove marker off
+               markHelper.open();advanceToStateAfterTime(480, 2);
                 break;
 
-            case 480: // shove marker off
-                markHelper.close();
+            case 480: // servo "close"
+               markHelper.close();
                 advanceToStateAfterTime(999, 1);
                 break;
-/*
-            case 410: // close servo arm
+
+         /*   case 410: // close servo arm
                 markHelper.close();
                 if(doCrater) {
 

@@ -182,9 +182,9 @@ public class MoveHelper extends NoOperationHelper {
 
     public void checkTeleOp(Gamepad gamepad1,Gamepad gamepad2){
         // alaina is struggling to find a way to describe this
-        double LY = -gamepad1.left_stick_y;
-        double LX = gamepad1.left_stick_x;
-        double RX = -gamepad1.right_stick_x;
+        double LY = -gamepad1.left_stick_y*3/4;
+        double LX = gamepad1.left_stick_x*3/4;
+        double RX = -gamepad1.right_stick_x*2/4;
 
      /*   if (gamepad1.y) {
             LY = 0.5;

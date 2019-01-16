@@ -10,7 +10,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class SampleHelper extends NoOperationHelper {
     public static double SAMPLE_SERVO_CLOSED = 1;
-    public static double SAMPLE_SERVO_OPEN = 0;
+    public static double SAMPLE_SERVO_OPEN = .3158;
     private boolean isPositionValid;
 
     protected Servo sampleServo;
