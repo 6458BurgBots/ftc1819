@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
+import com.qualcomm.robotcore.util.Hardware;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
@@ -61,6 +62,7 @@ public class Test_Linear extends LinearOpMode {
     SampleHelper sampleHelper;
     Mark markHelper;
     LanderHelper landerHelper;
+    CombineHelper combineHelper;
     double sampleArmPosition = SampleHelper.SAMPLE_SERVO_CLOSED;
     public final static double SAMPLE_ARM_SCALE = .1;
 
@@ -76,6 +78,8 @@ public class Test_Linear extends LinearOpMode {
         markHelper.init();
         landerHelper = new LanderHelper (telemetry,hardwareMap);
         landerHelper.init();
+        combineHelper = new CombineHelper(telemetry, hardwareMap );
+        combineHelper.init();
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -139,6 +143,24 @@ public class Test_Linear extends LinearOpMode {
             } else {
                 landerHelper.raiseArm(0);
             }
+
+            if(gamepad2.x){
+                combineHelper.intake(.9);
+                telemetry.addData("CRSERVO", ".9");
+            }else if(gamepad2.y){
+                combineHelper.intake(-.9);
+                telemetry.addData("CRSERVO", "-.9");
+
+            }else if(gamepad2.left_stick_button){
+                combineHelper.intake(-.9);
+                telemetry.addData("CRSERVO", "-.3");
+
+            }else{
+                combineHelper.intake(0);
+                telemetry.addData("CRSERVO", "0");
+            }
+
+
 
             sampleArmPosition += gamepad2.left_stick_y*SAMPLE_ARM_SCALE;
             sampleHelper.moveSampleServo(sampleArmPosition);
