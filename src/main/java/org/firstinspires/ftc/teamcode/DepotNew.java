@@ -10,16 +10,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 // name = "Minnow" shows up in the driver's station list
 // group = "Autonomous" refers to which list in the driver's station
 public class DepotNew extends OpMode {
-    private static final int UPPER_LIMIT = 10480;
+    private static final int UPPER_LIMIT = 11680;
     private static final int LOWER_LIMIT = 0;
     public static final double FAST_POWER =.7;
     private static final double SLOW_POWER = 0.3;
     private static final int DETECTION_MOVE = 3025;
     private static final int DEPOT_MOVE = 2215;
     private static final int DEPOT_TURN = 1150;
-    private static final int FIRST_LEFT_TURN = 715;
+    private static final int FIRST_LEFT_TURN = 770;
     private static final int SHIFT_RIGHT = 200;
-    private static final int FIRST_MOVE_OUT = 755;
+    private static final int FIRST_MOVE_OUT = 725;
     private static final int MOVE_BACKWARDS = 900;
     private static final int TURN_LEFT_FROM_CRATER = 1600;
 

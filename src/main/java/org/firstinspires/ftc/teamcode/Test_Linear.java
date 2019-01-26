@@ -63,6 +63,9 @@ public class Test_Linear extends LinearOpMode {
     Mark markHelper;
     LanderHelper landerHelper;
     CombineHelper combineHelper;
+    SweepHelper sweepHelper;
+    //TouchHelper touchHelper;
+    LiftHelper liftHelper;
     double sampleArmPosition = SampleHelper.SAMPLE_SERVO_CLOSED;
     public final static double SAMPLE_ARM_SCALE = .1;
 
@@ -80,6 +83,13 @@ public class Test_Linear extends LinearOpMode {
         landerHelper.init();
         combineHelper = new CombineHelper(telemetry, hardwareMap );
         combineHelper.init();
+        sweepHelper = new SweepHelper(telemetry, hardwareMap );
+        sweepHelper.init();
+        //touchHelper = new TouchHelper(telemetry, hardwareMap );
+        //touchHelper.init();
+        liftHelper = new LiftHelper(telemetry, hardwareMap );
+        liftHelper.init();
+
 
         // Wait for the game to start (driver presses PLAY)
         waitForStart();
@@ -159,6 +169,13 @@ public class Test_Linear extends LinearOpMode {
                 combineHelper.intake(0);
                 telemetry.addData("CRSERVO", "0");
             }
+            if (gamepad2.left_trigger > 0) {
+                liftHelper.setPower(gamepad2.left_trigger);
+            } else if (gamepad2.right_trigger > 0) {
+                liftHelper.setPower(-gamepad2.right_trigger);
+            } else {
+                liftHelper.setPower(0);
+            }
 
 
 
@@ -175,7 +192,7 @@ public class Test_Linear extends LinearOpMode {
             telemetry.addData("frontRight", moveHelper.GetFRMotorPosition());
             telemetry.addData( "arm",landerHelper.getPosition()); //Fix Fix Fix
             telemetry.addData("sample arm", sampleArmPosition);
-
+            telemetry.addData("lift arm", liftHelper.getPosition());
             telemetry.update();
 
             // Pause for 40 mS each cycle = update 25 times a second.

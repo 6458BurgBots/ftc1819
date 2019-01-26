@@ -184,7 +184,7 @@ public class MoveHelper extends NoOperationHelper {
         // alaina is struggling to find a way to describe this
         double LY = -gamepad1.left_stick_y*3/4;
         double LX = gamepad1.left_stick_x*3/4;
-        double RX = -gamepad1.right_stick_x*2/4;
+        double RX = -gamepad1.right_stick_x;
 
      /*   if (gamepad1.y) {
             LY = 0.5;

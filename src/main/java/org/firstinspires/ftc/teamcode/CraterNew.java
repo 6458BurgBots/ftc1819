@@ -10,14 +10,15 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 // name = "Minnow" shows up in the driver's station list
 // group = "Autonomous" refers to which list in the driver's station
 public class CraterNew extends OpMode {
-    private static final int UPPER_LIMIT = 10480;
+    private static final int UPPER_LIMIT = 11680;
     private static final int LOWER_LIMIT = 0;
     public static final double FAST_POWER =.7;
     private static final double SLOW_POWER = 0.3;
-    private static final int DETECTION_MOVE = 3025;
-    private static final int DEPOT_MOVE = 2215;
-    private static final int DEPOT_TURN = 700; //415
-    private static final int FIRST_LEFT_TURN = 715;
+    private static final int DETECTION_MOVE = 2925;
+    private static final int DEPOT_MOVE = -2215;
+    private static final int DEPOT_TURN = 1100; //415
+    private static final int FIRST_LEFT_TURN = 750;
+    private static final int SHIFT_FORWARD = 300;
     private static final int SHIFT_RIGHT = 200;
     private static final int FIRST_MOVE_OUT = 755;
     private static final int MOVE_BACKWARDS = 900;
@@ -104,13 +105,23 @@ public class CraterNew extends OpMode {
 
             case 50: //lowers arm/robot
                 landerHelper.runMotorsToPosition(UPPER_LIMIT);
-                advanceToStateAfterTime(60, 5);
+                advanceToStateAfterTime(60, 5.5);
                 break;
 
             case 60: //reset encoders/stop
                 landerHelper.resetEncoders();
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(70, 0.1);
+                advanceToStateAfterTime(64, 0.1);
+                break;
+
+            case 64: //shift forward to make sure back wheels hit the ground before shifting right
+                moveHelper.runMotorsToPosition(SHIFT_FORWARD, -SHIFT_FORWARD, -SHIFT_FORWARD, SHIFT_FORWARD);
+                advanceToStateAfterTime(68, 1);
+                break;
+
+            case 68: //stop
+                moveHelper.resetEncoders();
+                advanceToStateAfterTime(70, 0.5);
                 break;
 
             case 70: //shifts to the robot's right
@@ -218,7 +229,7 @@ public class CraterNew extends OpMode {
 
             case 420: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(999, 0.1);
+                advanceToStateAfterTime(430, 0.1);
                 break;
 
             case 430:// move towards the depot
@@ -228,18 +239,18 @@ public class CraterNew extends OpMode {
 
             case 440: //stop
                 moveHelper.resetEncoders();
-                advanceToStateAfterTime(450, 0.1);
-                break;
-
-            case 450://turn left away from the crater
-                moveHelper.runMotorsToPosition(-TURN_LEFT_FROM_CRATER,TURN_LEFT_FROM_CRATER,-TURN_LEFT_FROM_CRATER,TURN_LEFT_FROM_CRATER);
-                advanceToStateAfterTime(460, 1.8);
-                break;
-
-            case 460: //stop
-                moveHelper.resetEncoders();
                 advanceToStateAfterTime(470, 0.1);
                 break;
+
+//            case 450://turn left away from the crater
+//                moveHelper.runMotorsToPosition(-TURN_LEFT_FROM_CRATER,TURN_LEFT_FROM_CRATER,-TURN_LEFT_FROM_CRATER,TURN_LEFT_FROM_CRATER);
+//                advanceToStateAfterTime(460, 1.8);
+//                break;
+//
+//            case 460: //stop
+//                moveHelper.resetEncoders();
+//                advanceToStateAfterTime(470, 0.1);
+//                break;
 
           case 470: // shove marker off
                markHelper.open();advanceToStateAfterTime(480, 2);
