@@ -13,6 +13,7 @@ public class Muffin extends OpMode {
     SweepHelper sweepHelper;
     //MineralArmHelper mineralArmHelper;
     SampleHelper sampleHelper;
+    LiftHelper liftHelper;
 
     public void init() {
         moveHelper = new MoveHelper(telemetry, hardwareMap);
@@ -30,6 +31,8 @@ public class Muffin extends OpMode {
         combineHelper.init();
         sweepHelper = new SweepHelper(telemetry, hardwareMap);
         sweepHelper.init();
+        liftHelper = new LiftHelper(telemetry, hardwareMap );
+        liftHelper.init();
 
 
     }
@@ -68,7 +71,9 @@ public class Muffin extends OpMode {
             combineHelper.intake(.6);
         } else {
             combineHelper.intake(0);
+        }
 
+        liftHelper.setPower(-gamepad2.right_stick_y);
 
 
       /*  if (gamepad2.x){
@@ -78,7 +83,6 @@ public class Muffin extends OpMode {
         if(gamepad2.y){
             sampleHelper.open();
         }*/
-        }
 
     }
 }

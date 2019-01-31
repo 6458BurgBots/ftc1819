@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 public class Mark extends NoOperationHelper {
-    public static double MARKER_SERVO_CLOSED = 0;
+    public static double MARKER_SERVO_CLOSED = .25;
     public static double MARKER_SERVO_OPEN = 1;
     private boolean isPositionValid;
 
