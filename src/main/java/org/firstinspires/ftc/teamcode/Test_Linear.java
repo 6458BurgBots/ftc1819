@@ -170,11 +170,9 @@ public class Test_Linear extends LinearOpMode {
                 telemetry.addData("CRSERVO", "0");
             }
             if (gamepad2.left_trigger > 0) {
-                liftHelper.setPower(gamepad2.left_trigger);
+                liftHelper.raise(gamepad2.left_trigger);
             } else if (gamepad2.right_trigger > 0) {
-                liftHelper.setPower(-gamepad2.right_trigger);
-            } else {
-                liftHelper.setPower(0);
+                liftHelper.raise(-gamepad2.right_trigger);
             }
 
 
@@ -182,7 +180,11 @@ public class Test_Linear extends LinearOpMode {
             sampleArmPosition += gamepad2.left_stick_y*SAMPLE_ARM_SCALE;
             sampleHelper.moveSampleServo(sampleArmPosition);
 
-
+            if (gamepad2.left_bumper) {
+                liftHelper.holdPosition();
+            } else if(gamepad2.right_bumper){
+                liftHelper.resetHold();
+            }
 
 
 
@@ -193,6 +195,8 @@ public class Test_Linear extends LinearOpMode {
             telemetry.addData( "arm",landerHelper.getPosition()); //Fix Fix Fix
             telemetry.addData("sample arm", sampleArmPosition);
             telemetry.addData("lift arm", liftHelper.getPosition());
+            telemetry.addData("desired arm position", liftHelper.desiredPosition());
+
             telemetry.update();
 
             // Pause for 40 mS each cycle = update 25 times a second.

@@ -5,12 +5,13 @@ import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 @Autonomous(name="DepotNew", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
 // name = "Minnow" shows up in the driver's station list
 // group = "Autonomous" refers to which list in the driver's station
 public class DepotNew extends OpMode {
-    private static final int UPPER_LIMIT = 11680;
+    private static final int UPPER_LIMIT = 10468;
     private static final int LOWER_LIMIT = 0;
     public static final double FAST_POWER =.7;
     private static final double SLOW_POWER = 0.3;
@@ -79,6 +80,16 @@ public class DepotNew extends OpMode {
         }
     }
 
+    // Noticed that each case was similar, so created a procedure called advancedToStateAfterTime
+    // parameters include the newState, which refers to the new value being assigned to state at end of duration
+    // and duration, which refers to the amount of time before moving to the new state
+    private void advanceToStateAfterMotorDone(int newState, DcMotor motorToCheck) {
+        if (!motorToCheck.isBusy()) {
+            lastTime = getRuntime();
+            state = newState;
+        }
+    }
+
     public void init_loop() {
         if (gamepad1.y){
             doCrater=true;
@@ -90,21 +101,21 @@ public class DepotNew extends OpMode {
     }
 
 
-        public void loop() {
+    public void loop() {
         switch (state) {
             case 0:
                 lastTime = getRuntime();
                 state = 40;
                 break;
 
-           case 40:
+            case 40:
                 landerHelper.resetEncoders();
                 advanceToStateAfterTime(50, 0.1);
                 break;
 
             case 50: //lowers arm/robot
                 landerHelper.runMotorsToPosition(UPPER_LIMIT);
-                advanceToStateAfterTime(60, 5);
+                advanceToStateAfterMotorDone(60, landerHelper.armMotor);
                 break;
 
             case 60: //reset encoders/stop
@@ -134,7 +145,7 @@ public class DepotNew extends OpMode {
                 break;
 
             case 220://turn left
-                moveHelper.runMotorsToPosition(-FIRST_LEFT_TURN,FIRST_LEFT_TURN,-FIRST_LEFT_TURN,FIRST_LEFT_TURN);
+                moveHelper.runMotorsToPosition(-FIRST_LEFT_TURN, FIRST_LEFT_TURN, -FIRST_LEFT_TURN, FIRST_LEFT_TURN);
                 advanceToStateAfterTime(230, 1.8);
                 break;
 
@@ -145,7 +156,7 @@ public class DepotNew extends OpMode {
                 break;
 
             case 240: //move back
-                moveHelper.runMotorsToPosition(-MOVE_BACKWARDS,-MOVE_BACKWARDS,-MOVE_BACKWARDS,-MOVE_BACKWARDS);
+                moveHelper.runMotorsToPosition(-MOVE_BACKWARDS, -MOVE_BACKWARDS, -MOVE_BACKWARDS, -MOVE_BACKWARDS);
 
                 advanceToStateAfterTime(250, 2.0);
                 break;
@@ -158,12 +169,12 @@ public class DepotNew extends OpMode {
 
             case 260:
                 moveHelper.encoderPowerLevel = 0; // because this is zero, we are just setting the position into the encoders
-                moveHelper.runMotorsToPosition(DETECTION_MOVE,DETECTION_MOVE,DETECTION_MOVE,DETECTION_MOVE); //this is the set position
-                state=270;
+                moveHelper.runMotorsToPosition(DETECTION_MOVE, DETECTION_MOVE, DETECTION_MOVE, DETECTION_MOVE); //this is the set position
+                state = 270;
                 break;
 
             case 270: //check the 1st mineral
-                if(detector.isFound()){
+                if (detector.isFound()) {
                     state = 280;
                 } else {
                     moveHelper.encoderPowerLevel = SLOW_POWER;
@@ -212,7 +223,7 @@ public class DepotNew extends OpMode {
                 break;
 
             case 410://turn right towards depot
-                moveHelper.runMotorsToPosition(DEPOT_TURN,-DEPOT_TURN,DEPOT_TURN,-DEPOT_TURN);
+                moveHelper.runMotorsToPosition(DEPOT_TURN, -DEPOT_TURN, DEPOT_TURN, -DEPOT_TURN);
                 advanceToStateAfterTime(420, 1.8);
                 break;
 
@@ -222,7 +233,7 @@ public class DepotNew extends OpMode {
                 break;
 
             case 430:// move towards the depot
-                moveHelper.runMotorsToPosition(DEPOT_MOVE,DEPOT_MOVE,DEPOT_MOVE,DEPOT_MOVE);
+                moveHelper.runMotorsToPosition(DEPOT_MOVE, DEPOT_MOVE, DEPOT_MOVE, DEPOT_MOVE);
                 advanceToStateAfterTime(440, 2.0);
                 break;
 
@@ -232,7 +243,7 @@ public class DepotNew extends OpMode {
                 break;
 
             case 450://turn left away from the crater
-                moveHelper.runMotorsToPosition(-TURN_LEFT_FROM_CRATER,TURN_LEFT_FROM_CRATER,-TURN_LEFT_FROM_CRATER,TURN_LEFT_FROM_CRATER);
+                moveHelper.runMotorsToPosition(-TURN_LEFT_FROM_CRATER, TURN_LEFT_FROM_CRATER, -TURN_LEFT_FROM_CRATER, TURN_LEFT_FROM_CRATER);
                 advanceToStateAfterTime(460, 1.8);
                 break;
 
@@ -241,12 +252,13 @@ public class DepotNew extends OpMode {
                 advanceToStateAfterTime(470, 0.1);
                 break;
 
-          case 470: // shove marker off
-               markHelper.open();advanceToStateAfterTime(480, 2);
+            case 470: // shove marker off
+                markHelper.open();
+                advanceToStateAfterTime(480, 2);
                 break;
 
             case 480: // servo "close"
-               markHelper.close();
+                markHelper.close();
                 advanceToStateAfterTime(999, 1);
                 break;
 
@@ -270,10 +282,9 @@ public class DepotNew extends OpMode {
 */
 
 
-
-
         }
-        telemetry.addData("State:",state);
+        telemetry.addData("State:", state);
+        telemetry.addData("arm encoder: ", landerHelper.getPosition());
     }
 }
 

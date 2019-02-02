@@ -46,9 +46,8 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Use Android Studio to Copy this Class, and Paste it into your team's code folder with a new name.
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
-@TeleOp(name = "TouchTest", group = "Sensor")
-
-public class TouchHelper extends LinearOpMode {
+@TeleOp(name = "TouchTest", group = "TeleOp")
+public class TouchTestOp extends LinearOpMode {
     /**
      * The REV Robotics Touch Sensor
      * is treated as a digital channel.  It is HIGH if the button is unpressed.
@@ -59,13 +58,6 @@ public class TouchHelper extends LinearOpMode {
      * The lower (first) pin stays unconnected.*
      */
     SweepHelper sweepHelper;
-    protected Telemetry telemetry;
-    protected HardwareMap hardwareMap;
-    TouchHelper(Telemetry t, HardwareMap h)
-    {
-        telemetry = t;
-        hardwareMap = h;
-    }
 
     DigitalChannel digitalTouch;  // Hardware Device Object
 
@@ -74,6 +66,11 @@ public class TouchHelper extends LinearOpMode {
         // get a reference to our digitalTouch object.
         digitalTouch = hardwareMap.get(DigitalChannel.class, "sensor_digital");
 
+        if (digitalTouch == null) {
+            telemetry.addData("Failed to initialize sensor_digital","");
+            telemetry.update();
+            sleep(5000);
+        }
         // set the digital channel to input.
         digitalTouch.setMode(DigitalChannel.Mode.INPUT);
         sweepHelper = new SweepHelper(telemetry, hardwareMap );
@@ -88,12 +85,12 @@ public class TouchHelper extends LinearOpMode {
 
             // send the info back to driver station using telemetry function.
             // if the digital channel returns true it's HIGH and the button is unpressed.
-            if (digitalTouch.getState() == true) {
+            if (!digitalTouch.getState()) {
                 telemetry.addData("Digital Touch", "Is Not Pressed");
                 if (gamepad1.left_bumper){
                     sweepHelper.in(-1);
                 }
-            } else if (digitalTouch.getState() == false){
+            } else if (digitalTouch.getState()){
                 sweepHelper.in(0);
                 telemetry.addData("Digital Touch", "Is Pressed");
             }
