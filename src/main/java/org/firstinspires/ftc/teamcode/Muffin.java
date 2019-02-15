@@ -3,6 +3,14 @@ package org.firstinspires.ftc.teamcode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Helpers.CombineHelper;
+import org.firstinspires.ftc.teamcode.Helpers.LanderHelper;
+import org.firstinspires.ftc.teamcode.Helpers.LiftHelper;
+import org.firstinspires.ftc.teamcode.Helpers.Mark;
+import org.firstinspires.ftc.teamcode.Helpers.MoveHelper;
+import org.firstinspires.ftc.teamcode.Helpers.SampleHelper;
+import org.firstinspires.ftc.teamcode.Helpers.SweepHelper;
+
 @TeleOp(name="TeleOp", group="TeleOp")
 public class Muffin extends OpMode {
 
@@ -58,9 +66,9 @@ public class Muffin extends OpMode {
             mark.close();
         }
         if (gamepad2.left_bumper) {
-            sweepHelper.in(-1);
-        } else if (gamepad2.right_bumper) {
             sweepHelper.in(1);
+        } else if (gamepad2.right_bumper) {
+            sweepHelper.in(-1);
         } else {
             sweepHelper.in(0);
         }
@@ -72,10 +80,10 @@ public class Muffin extends OpMode {
         } else {
             combineHelper.intake(0);
         }
-
-        liftHelper.setPower(-gamepad2.right_stick_y);
-
-
+        if (gamepad2.right_stick_y !=0) {
+            liftHelper.raise(-gamepad2.right_stick_y);
+        }
+        sweepHelper.showTouchStatus(telemetry);
       /*  if (gamepad2.x){
             sampleHelper.close();
         }

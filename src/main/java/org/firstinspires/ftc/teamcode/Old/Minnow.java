@@ -1,10 +1,15 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Old;
 
 import com.disnodeteam.dogecv.CameraViewDisplay;
 import com.disnodeteam.dogecv.DogeCV;
 import com.disnodeteam.dogecv.detectors.roverrukus.GoldAlignDetector;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
+import org.firstinspires.ftc.teamcode.Helpers.LanderHelper;
+import org.firstinspires.ftc.teamcode.Helpers.Mark;
+import org.firstinspires.ftc.teamcode.Helpers.MoveHelper;
+import org.firstinspires.ftc.teamcode.Helpers.SampleHelper;
 
 @Autonomous(name="OldSampleDepot", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
 // name = "Minnow" shows up in the driver's station list

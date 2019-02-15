@@ -27,15 +27,13 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Old;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Helpers.SweepHelper;
 
 /*
  * This is an example LinearOpMode that shows how to use
@@ -47,7 +45,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list.
  */
 @TeleOp(name = "TouchTest", group = "TeleOp")
-public class TouchTestOp extends LinearOpMode {
+public class TouchSensorExample extends LinearOpMode {
     /**
      * The REV Robotics Touch Sensor
      * is treated as a digital channel.  It is HIGH if the button is unpressed.
@@ -85,12 +83,12 @@ public class TouchTestOp extends LinearOpMode {
 
             // send the info back to driver station using telemetry function.
             // if the digital channel returns true it's HIGH and the button is unpressed.
-            if (!digitalTouch.getState()) {
+            if (digitalTouch.getState()) {
                 telemetry.addData("Digital Touch", "Is Not Pressed");
                 if (gamepad1.left_bumper){
                     sweepHelper.in(-1);
                 }
-            } else if (digitalTouch.getState()){
+            } else if (!digitalTouch.getState()){
                 sweepHelper.in(0);
                 telemetry.addData("Digital Touch", "Is Pressed");
             }

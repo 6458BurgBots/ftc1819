@@ -29,14 +29,16 @@
 
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.ColorSensor;
-import com.qualcomm.robotcore.util.Hardware;
-import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcontroller.external.samples.HardwareK9bot;
+import org.firstinspires.ftc.teamcode.Helpers.CombineHelper;
+import org.firstinspires.ftc.teamcode.Helpers.LanderHelper;
+import org.firstinspires.ftc.teamcode.Helpers.LiftHelper;
+import org.firstinspires.ftc.teamcode.Helpers.Mark;
+import org.firstinspires.ftc.teamcode.Helpers.MoveHelper;
+import org.firstinspires.ftc.teamcode.Helpers.SampleHelper;
+import org.firstinspires.ftc.teamcode.Helpers.SweepHelper;
 
 /**
  * This OpMode uses the common HardwareK9bot class to define the devices on the robot.

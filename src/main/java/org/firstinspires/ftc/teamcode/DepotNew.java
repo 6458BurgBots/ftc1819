@@ -7,22 +7,28 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.Helpers.LanderHelper;
+import org.firstinspires.ftc.teamcode.Helpers.Mark;
+import org.firstinspires.ftc.teamcode.Helpers.MoveHelper;
+import org.firstinspires.ftc.teamcode.Helpers.SampleHelper;
+
 @Autonomous(name="DepotNew", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
 // name = "Minnow" shows up in the driver's station list
 // group = "Autonomous" refers to which list in the driver's station
 public class DepotNew extends OpMode {
-    private static final int UPPER_LIMIT = 10468;
+    private static final int UPPER_LIMIT = 11221;
     private static final int LOWER_LIMIT = 0;
     public static final double FAST_POWER =.7;
     private static final double SLOW_POWER = 0.3;
     private static final int DETECTION_MOVE = 3025;
     private static final int DEPOT_MOVE = 2215;
     private static final int DEPOT_TURN = 1150;
-    private static final int FIRST_LEFT_TURN = 770;
+    private static final int FIRST_LEFT_TURN = 800;
     private static final int SHIFT_RIGHT = 200;
     private static final int FIRST_MOVE_OUT = 725;
     private static final int MOVE_BACKWARDS = 900;
     private static final int TURN_LEFT_FROM_CRATER = 1600;
+    private static final int LAST_MOVE_FORWARD = 300;
 
     MoveHelper moveHelper;
     LanderHelper landerHelper;
@@ -146,7 +152,7 @@ public class DepotNew extends OpMode {
 
             case 220://turn left
                 moveHelper.runMotorsToPosition(-FIRST_LEFT_TURN, FIRST_LEFT_TURN, -FIRST_LEFT_TURN, FIRST_LEFT_TURN);
-                advanceToStateAfterTime(230, 1.8);
+                advanceToStateAfterTime(230, 1.9);
                 break;
 
             case 230: //stop
@@ -219,6 +225,7 @@ public class DepotNew extends OpMode {
 
             case 405: //stop
                 moveHelper.resetEncoders();
+                detector.disable(); //Turns off Vision Detection to prevent phone crashes
                 advanceToStateAfterTime(410, 0.1);
                 break;
 
@@ -259,7 +266,17 @@ public class DepotNew extends OpMode {
 
             case 480: // servo "close"
                 markHelper.close();
-                advanceToStateAfterTime(999, 1);
+                advanceToStateAfterTime(490, 1);
+                break;
+
+            case 490:// move towards the depot
+                moveHelper.runMotorsToPosition(LAST_MOVE_FORWARD, LAST_MOVE_FORWARD, LAST_MOVE_FORWARD, LAST_MOVE_FORWARD);
+                advanceToStateAfterTime(500, 1.0);
+                break;
+
+            case 500: //stop
+                moveHelper.resetEncoders();
+                advanceToStateAfterTime(999, 0.1);
                 break;
 
          /*   case 410: // close servo arm

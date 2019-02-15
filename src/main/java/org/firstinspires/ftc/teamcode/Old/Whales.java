@@ -1,8 +1,11 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Old;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+
+import org.firstinspires.ftc.teamcode.Helpers.LanderHelper;
+import org.firstinspires.ftc.teamcode.Helpers.Mark;
+import org.firstinspires.ftc.teamcode.Helpers.MoveHelper;
 
 @Autonomous(name="Whales", group="Autonomous") // @TeleOp refers to an annotation (attribute) of the Whales class
                                             // name = "Whales" shows up in the driver's station list

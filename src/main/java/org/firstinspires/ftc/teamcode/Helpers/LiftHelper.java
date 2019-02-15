@@ -1,19 +1,18 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Helpers;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Helpers.NoOperationHelper;
 
 public class LiftHelper extends NoOperationHelper {
     private DcMotor liftMotor;
     private static final int UPPER_LIMIT = 3600;
     private double desiredPosition = 0;
 
-    LiftHelper(Telemetry t, HardwareMap h) {
+    public LiftHelper(Telemetry t, HardwareMap h) {
         super(t, h);
     }
 

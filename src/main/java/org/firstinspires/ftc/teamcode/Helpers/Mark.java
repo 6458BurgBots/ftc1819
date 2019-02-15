@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Helpers;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.util.Range;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Helpers.NoOperationHelper;
 
 public class Mark extends NoOperationHelper {
     public static double MARKER_SERVO_CLOSED = .25;
@@ -16,7 +14,7 @@ public class Mark extends NoOperationHelper {
     protected Servo markerServo;
 
 
-    Mark(Telemetry t, HardwareMap h) {
+    public Mark(Telemetry t, HardwareMap h) {
         super(t, h);
     }
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.Helpers;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Helpers.NoOperationHelper;
 
 public class MineralArmHelper extends NoOperationHelper {
     private DcMotor elbowMotor;
@@ -23,7 +24,7 @@ public class MineralArmHelper extends NoOperationHelper {
     protected Servo mineralServo;
     protected Servo elbowServo;
 
-    MineralArmHelper(Telemetry t, HardwareMap h)
+    public MineralArmHelper(Telemetry t, HardwareMap h)
     {
         super(t, h);
     }
@@ -39,7 +40,7 @@ public class MineralArmHelper extends NoOperationHelper {
         shoulderMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         shoulderPosition = shoulderMotor.getCurrentPosition();
 
-        mineralServo = hardwareMap.servo.get("Mineral Servo");
+        mineralServo = hardwareMap.servo.get("MineralServo");
         servoPosition = MINERAL_SERVO_HOME;
         mineralServo.setPosition(servoPosition);
 
