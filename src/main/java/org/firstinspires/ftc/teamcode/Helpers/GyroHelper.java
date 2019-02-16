@@ -12,7 +12,7 @@ package org.firstinspires.ftc.teamcode.Helpers;
 
 public class GyroHelper extends NoOperationHelper {
 
-    private GyroSensor gyroBoy;
+    public GyroSensor gyroBoy;   //Make private Later
     private boolean calibrationStarted=false;
     private int lastHeading;
     private double lastRunTime;

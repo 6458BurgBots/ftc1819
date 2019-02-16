@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Helpers.CombineHelper;
+import org.firstinspires.ftc.teamcode.Helpers.GyroHelper;
 import org.firstinspires.ftc.teamcode.Helpers.LanderHelper;
 import org.firstinspires.ftc.teamcode.Helpers.LiftHelper;
 import org.firstinspires.ftc.teamcode.Helpers.Mark;
@@ -14,6 +15,7 @@ import org.firstinspires.ftc.teamcode.Helpers.SweepHelper;
 @TeleOp(name="TeleOp", group="TeleOp")
 public class Muffin extends OpMode {
 
+    GyroHelper gyroHelper;
     MoveHelper moveHelper;
     LanderHelper landerHelper;
     Mark mark;
@@ -41,7 +43,8 @@ public class Muffin extends OpMode {
         sweepHelper.init();
         liftHelper = new LiftHelper(telemetry, hardwareMap );
         liftHelper.init();
-
+        gyroHelper= new GyroHelper(telemetry,hardwareMap);
+        gyroHelper.init();
 
     }
 
@@ -91,6 +94,13 @@ public class Muffin extends OpMode {
         if(gamepad2.y){
             sampleHelper.open();
         }*/
-
+        if (gyroHelper.gyroBoy.getHeading() >= 27){
+            moveHelper.runBLMotor(-1);
+            moveHelper.runBRMotor(-1);
+        }
+         else if (gyroHelper.gyroBoy.getHeading() < 27){
+            moveHelper.runBLMotor(0);
+            moveHelper.runBRMotor(0);
+        }
     }
 }
