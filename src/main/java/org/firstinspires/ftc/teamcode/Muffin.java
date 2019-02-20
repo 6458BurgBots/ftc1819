@@ -1,8 +1,11 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DistanceSensor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.Helpers.CombineHelper;
 import org.firstinspires.ftc.teamcode.Helpers.GyroHelper;
 import org.firstinspires.ftc.teamcode.Helpers.LanderHelper;
@@ -25,7 +28,14 @@ public class Muffin extends OpMode {
     SampleHelper sampleHelper;
     LiftHelper liftHelper;
 
+    private DistanceSensor sensorRange;
+
+
     public void init() {
+
+        sensorRange = hardwareMap.get(DistanceSensor.class, "range");
+        Rev2mDistanceSensor sensorTimeOfFlight = (Rev2mDistanceSensor)sensorRange;
+
         moveHelper = new MoveHelper(telemetry, hardwareMap);
         moveHelper.init();
         //something will happen here
@@ -37,7 +47,7 @@ public class Muffin extends OpMode {
         //mineralArmHelper.init();
         sampleHelper = new SampleHelper(telemetry, hardwareMap);
         sampleHelper.init();
-        combineHelper = new CombineHelper(telemetry, hardwareMap);
+        combineHelper = new CombineHelper( telemetry, hardwareMap);
         combineHelper.init();
         sweepHelper = new SweepHelper(telemetry, hardwareMap);
         sweepHelper.init();
@@ -49,8 +59,21 @@ public class Muffin extends OpMode {
     }
 
     public void loop() {
+
+        int heading = gyroHelper.gyroBoy.getHeading();
+        if ( heading >= 10 && heading < 300){
+            moveHelper.runBLMotor(-1);
+            moveHelper.runBRMotor(-1);
+            moveHelper.runFLMotor(0);
+            moveHelper.runFRMotor(0);
+        } else {
+            moveHelper.checkTeleOp(gamepad1, gamepad2); // Only allow joystrick control if the robot is not tilted
+        }
+
+
+        telemetry.addData("Heading", gyroHelper.gyroBoy.getHeading());
+
         landerHelper.checkTeleOp(gamepad1, gamepad2);
-        moveHelper.checkTeleOp(gamepad1, gamepad2);
         //mineralArmHelper.checkTeleOp(gamepad1,gamepad2);
         if (gamepad1.right_trigger > 0) {
             moveHelper.resetEncoders();
@@ -68,13 +91,7 @@ public class Muffin extends OpMode {
         if (gamepad2.x) {
             mark.close();
         }
-        if (gamepad2.left_bumper) {
-            sweepHelper.in(1);
-        } else if (gamepad2.right_bumper) {
-            sweepHelper.in(-1);
-        } else {
-            sweepHelper.in(0);
-        }
+
         if (gamepad2.dpad_up) {
             combineHelper.intake(-.9);
 
@@ -94,13 +111,24 @@ public class Muffin extends OpMode {
         if(gamepad2.y){
             sampleHelper.open();
         }*/
-        if (gyroHelper.gyroBoy.getHeading() >= 27){
-            moveHelper.runBLMotor(-1);
-            moveHelper.runBRMotor(-1);
+        telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
+        double in = sensorRange.getDistance(DistanceUnit.INCH);
+        double out = sensorRange.getDistance(DistanceUnit.INCH);
+
+        if ( in <= 1.2) {
+            sweepHelper.in(-1);
         }
-         else if (gyroHelper.gyroBoy.getHeading() < 27){
-            moveHelper.runBLMotor(0);
-            moveHelper.runBRMotor(0);
+        else if ( out >= 16.4) {
+            sweepHelper.in ( 1);
+        }
+        else {
+            if (gamepad2.left_bumper) {
+                sweepHelper.in(1);
+            } else if (gamepad2.right_bumper) {
+                sweepHelper.in(-1);
+            } else {
+                sweepHelper.in(0);
+            }
         }
     }
 }
