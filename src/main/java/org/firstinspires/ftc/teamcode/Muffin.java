@@ -61,11 +61,15 @@ public class Muffin extends OpMode {
     public void loop() {
 
         int heading = gyroHelper.gyroBoy.getHeading();
-        if ( heading >= 10 && heading < 300){
+        // if robot tilt is greater than 10 degrees, power only the back wheels to
+        // autocorrect the robot backward to avoid tilting over
+        // remove this behavior if the left bumper on gamepad1 is pressed
+        if ( heading >= 10 && heading < 300 && !gamepad1.left_bumper){
             moveHelper.runBLMotor(-1);
             moveHelper.runBRMotor(-1);
             moveHelper.runFLMotor(0);
             moveHelper.runFRMotor(0);
+            telemetry.addData("ROBOT TILT DETECTED", "");
         } else {
             moveHelper.checkTeleOp(gamepad1, gamepad2); // Only allow joystrick control if the robot is not tilted
         }
@@ -112,23 +116,17 @@ public class Muffin extends OpMode {
             sampleHelper.open();
         }*/
         telemetry.addData("range", String.format("%.01f in", sensorRange.getDistance(DistanceUnit.INCH)));
-        double in = sensorRange.getDistance(DistanceUnit.INCH);
-        double out = sensorRange.getDistance(DistanceUnit.INCH);
+        double range = sensorRange.getDistance(DistanceUnit.INCH);
 
-        if ( in <= 1.2) {
+        double SHORT_DISTANCE = 1.2;
+        double LONG_DISTANCE = 13.5;
+
+        if (gamepad2.left_bumper && range >= SHORT_DISTANCE) {
+            sweepHelper.in(1);
+        } else if (gamepad2.right_bumper && range <= LONG_DISTANCE) {
             sweepHelper.in(-1);
-        }
-        else if ( out >= 16.4) {
-            sweepHelper.in ( 1);
-        }
-        else {
-            if (gamepad2.left_bumper) {
-                sweepHelper.in(1);
-            } else if (gamepad2.right_bumper) {
-                sweepHelper.in(-1);
-            } else {
-                sweepHelper.in(0);
-            }
+        } else {
+            sweepHelper.in(0);
         }
     }
 }
